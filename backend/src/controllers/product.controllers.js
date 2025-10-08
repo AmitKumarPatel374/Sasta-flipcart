@@ -43,6 +43,13 @@ const createProductController = async (req, res) => {
                 message: "Images is required",
             })
         }
+        
+        let uploadedImageUrl = await Promise.all(
+            req.files.map(async(elem)=>{
+                return await sendFilesToStorage(elem.buffer,elem.originalname);
+            })
+        )
+        
 
         if (!title || !description || !amount || !currency) {
             return res.status(404).json({
@@ -57,9 +64,10 @@ const createProductController = async (req, res) => {
                 amount,
                 currency
             },
-            images: req.files.map((elem) => elem.url),
+            images: uploadedImageUrl.map((elem) => elem.url),
         })
 
+        console.log(newProduct);
         return res.status(200).json({
             message: "product created",
             product: newProduct
@@ -138,7 +146,7 @@ const deleteProductController = async (req, res) => {
             })
         }
 
-        let deletedProduct = await productModel.findByIdAndDelete(productModel);
+        let deletedProduct = await productModel.findByIdAndDelete(product_id);
 
         if (!deletedProduct) {
             return res.status(400).json({
@@ -150,6 +158,7 @@ const deleteProductController = async (req, res) => {
             message: "product deleter successfully!",
         })
     } catch (error) {
+        console.log(error);
         return res.status(500).json({
             message: "internal server error!",
         })
