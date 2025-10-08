@@ -1,5 +1,8 @@
 const UserModel = require("../model/user.model");
 const cacheInstance = require("../services/cache.service");
+const jwt = require("jsonwebtoken");
+const sendMail = require("../services/mail.service");
+const resePassTemp = require("../utils/email.template");
 
 const registerController = async (req, res) => {
     try {
@@ -26,7 +29,7 @@ const registerController = async (req, res) => {
         });
 
         let token = newUser.generateToken();
-        res.cookie("token",token);
+        res.cookie("token", token);
 
         return res.status(201).json({
             message: "user registered",
@@ -65,7 +68,7 @@ const loginController = async (req, res) => {
             });
 
         let token = user.generateToken();
-        res.cookie("token",token);
+        res.cookie("token", token);
 
         return res.status(200).json({
             message: "user logged in",
@@ -104,6 +107,51 @@ const logoutController = async (req, res) => {
             error: error,
         });
     }
+}
+
+const forgotPasswordController = async (req, res) => {
+    try {
+        let { email } = req.body;
+
+        if (!email) {
+            return res.status(404).json({
+                message: "email not found",
+            });
+        }
+
+        let user = await UserModel.findOne({ email });
+
+        if (!user) {
+            return res.status(404).json({
+                message: "user not found",
+            });
+        }
+
+        let resetToken = jwt.sign({ id: user._id }, process.env.JWT_RAW_SECRET, {
+            expiresIn: "10m"
+        })
+
+        let resetLink = `https://localhost:3000/api/auth/reset-password/${resetToken}`;
+
+        let resetTemp = resePassTemp(user.fullname, resetLink);
+
+        await sendMail(
+            email,
+            "Reset your Password",
+            resetTemp
+        );
+
+        return res.status(201).json({
+            message: "reset link sended at your registered email!"
+        })
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: "Internal server error ",
+            error: error,
+        });
+    }
+
 }
 
 module.exports = {
