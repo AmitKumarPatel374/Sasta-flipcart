@@ -106,7 +106,7 @@ const updateProductController = async (req, res) => {
                     amount,
                     currency
                 },
-                images: uploadedImage.map((elem) => elem.url);
+                images: uploadedImage.map((elem) => elem.url)
             },
             {
                 new: true
@@ -116,7 +116,7 @@ const updateProductController = async (req, res) => {
 
         return res.status(200).json({
             message: "products updated!",
-            product:updatedProduct
+            product: updatedProduct
         })
 
     } catch (error) {
@@ -128,6 +128,38 @@ const updateProductController = async (req, res) => {
     }
 }
 
+const deleteProductController = async (req, res) => {
+    try {
+        let product_id = req.params.product_id;
+
+        if (!product_id) {
+            return res.status(404).json({
+                message: "id not found",
+            })
+        }
+
+        let deletedProduct = await productModel.findByIdAndDelete(productModel);
+
+        if (!deletedProduct) {
+            return res.status(400).json({
+                message: "something went wrong",
+            })
+        }
+
+        return res.status(200).json({
+            message: "product deleter successfully!",
+        })
+    } catch (error) {
+        return res.status(500).json({
+            message: "internal server error!",
+        })
+    }
+}
 
 
-module.exports = { createProductController }
+module.exports = {
+    createProductController,
+    getAllProductController,
+    updateProductController,
+    deleteProductController
+}
