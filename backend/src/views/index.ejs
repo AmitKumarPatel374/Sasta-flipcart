@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Password Reset</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gradient-to-r from-purple-500 to-indigo-600 flex items-center justify-center min-h-screen">
+  <div class="bg-white rounded-xl shadow-xl p-8 w-full max-w-md">
+    <h1 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Reset Your Password</h1>
+
+    <form action="http://localhost:3000/api/auth/update-Password/<%=id%>" method="post" class="flex flex-col gap-4">
+      <input type="password" name="password" id="inp1" placeholder="New password"
+        class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400" required>
+      <input type="password" id="inp2" placeholder="Confirm password"
+        class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400" required>
+      <button id="btn"
+        class="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-3 rounded-lg transition-colors">Submit</button>
+    </form>
+
+    <p class="text-sm text-gray-500 mt-4 text-center">Make sure both passwords match</p>
+  </div>
+
+  <script>
+    let inp1 = document.querySelector("#inp1");
+    let inp2 = document.querySelector("#inp2");
+    let form = document.querySelector("form");
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (inp1.value !== inp2.value) {
+        return alert("Passwords do not match!");
+      }
+      alert("Password reset successfully");
+      form.submit();
+    });
+  </script>
+</body>
+
+</html>

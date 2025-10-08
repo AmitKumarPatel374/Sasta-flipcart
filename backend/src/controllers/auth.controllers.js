@@ -154,8 +154,68 @@ const forgotPasswordController = async (req, res) => {
 
 }
 
+const resetPasswordController = async (req, res) => {
+    try {
+        let token = req.params.resetToken;
+        if (!token) {
+            return res.status(404).json({
+                message: "token not found",
+            });
+        }
+
+        let decode = jwt.verify(token, process.env.JWT_RAW_SECRET);
+
+        return res.render("index.ejs", { id: decode.id })
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: "Internal server error ",
+            error: error,
+        });
+    }
+}
+const updatePasswordController = async (req, res) => {
+    try {
+
+        let id = req.params.id;
+        let { password } = req.body;
+        if (!id) {
+            return res.status(404).json({
+                message: "id not found",
+            });
+        }
+
+        let updatedPassUser = await UserModel.findByIdAndUpdate(
+            {
+                _id: id
+            },
+            {
+                password: password
+            },
+            {
+                new: true
+            }
+        )
+
+        return res.status(200).json({
+            message: "password updated successfully!",
+            upadatedUser: updatedPassUser
+        })
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: "Internal server error ",
+            error: error,
+        });
+    }
+}
+
 module.exports = {
     registerController,
     loginController,
-    logoutController
+    logoutController,
+    forgotPasswordController,
+    resetPasswordController,
+    updatePasswordController
 };
