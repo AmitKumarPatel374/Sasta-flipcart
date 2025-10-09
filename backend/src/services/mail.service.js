@@ -12,7 +12,7 @@ const sendMail = async(to,subject,html)=>{
     let newMail = {
         to,
         subject,
-        htmml
+        html
     }
 
     return await transporter.sendMail(newMail);

@@ -1,6 +1,7 @@
 const UserModel = require("../model/user.model");
 const cacheInstance = require("../services/cache.service");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 const sendMail = require("../services/mail.service");
 const resePassTemp = require("../utils/email.template");
 
@@ -60,7 +61,7 @@ const loginController = async (req, res) => {
                 message: "User not found",
             });
 
-        let cp = user.comparePass(password);
+        let cp = await user.comparePass(password);
 
         if (!cp)
             return res.status(400).json({
@@ -128,10 +129,12 @@ const forgotPasswordController = async (req, res) => {
         }
 
         let resetToken = jwt.sign({ id: user._id }, process.env.JWT_RAW_SECRET, {
-            expiresIn: "10m"
+            expiresIn: "2min"
         })
 
-        let resetLink = `https://localhost:3000/api/auth/reset-password/${resetToken}`;
+        console.log(resetToken);
+
+        let resetLink = `http://localhost:3000/api/auth/reset-password/${resetToken}`;
 
         let resetTemp = resePassTemp(user.fullname, resetLink);
 
@@ -156,7 +159,7 @@ const forgotPasswordController = async (req, res) => {
 
 const resetPasswordController = async (req, res) => {
     try {
-        let token = req.params.resetToken;
+        let token = req.params.token;
         if (!token) {
             return res.status(404).json({
                 message: "token not found",
@@ -174,6 +177,7 @@ const resetPasswordController = async (req, res) => {
         });
     }
 }
+
 const updatePasswordController = async (req, res) => {
     try {
 
@@ -185,12 +189,14 @@ const updatePasswordController = async (req, res) => {
             });
         }
 
+        let hashPass = await bcrypt.hash(password,11);
+
         let updatedPassUser = await UserModel.findByIdAndUpdate(
             {
                 _id: id
             },
             {
-                password: password
+                password: hashPass
             },
             {
                 new: true
