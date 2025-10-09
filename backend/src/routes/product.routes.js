@@ -5,9 +5,9 @@ const authMiddleware = require("../middlewares/auth.middleware");
 
 const router = express.Router();
 
-router.post("/create-product",uploads.array("images",5),createProductController);
-router.get("/get-products",getAllProductController);
-router.put("/update-product/:product_id",uploads.array("images",5),updateProductController);
-router.delete("/delete-product/:product_id",authMiddleware ,deleteProductController);
+router.post("/create-product", uploads.array("images", 5), createProductController);
+router.get("/get-products", getAllProductController);
+router.put("/update-product/:product_id", uploads.array("images", 5), updateProductController);
+router.delete("/delete-product/:product_id", authMiddleware, deleteProductController);
 
 module.exports = router;

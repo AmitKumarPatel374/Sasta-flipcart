@@ -10,12 +10,12 @@ const authMiddleware = async (req, res, next) => {
         message: "Token not found",
       });
 
-    // let isBlacklisted = cacheInstance.get(token);
+    let isBlacklisted = await cacheInstance.get(token);
 
-    // if (isBlacklisted)
-    //   return res.status(400).json({
-    //     message: "Token blacklisted",
-    //   });
+    if (isBlacklisted)
+      return res.status(400).json({
+        message: "Token blacklisted",
+      });
 
     let decode = jwt.verify(token, process.env.JWT_SECRET);
 

@@ -1,5 +1,5 @@
 const resePassTemp = (username, resetLink) => {
-    return `
+  return `
       <div>
          <h1>Hello ${username}</h1>
          <p>this is your reset link <a href="${resetLink}">reset-link</a></p>

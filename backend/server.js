@@ -6,6 +6,7 @@ const path = require("path");
 const ejs = require("ejs");
 const authRoutes = require("./src/routes/auth.routes");
 const productRoutes = require("./src/routes/product.routes");
+const adminRoutes = require("./src/routes/admin.routes");
 const connectDB = require("./src/config/database/db");
 const cacheInstance = require("./src/services/cache.service");
 
@@ -31,6 +32,7 @@ app.use(cookieParser());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/product", productRoutes);
+app.use("/api/admin", adminRoutes);
 
 let port = process.env.PORT || 5000;
 
