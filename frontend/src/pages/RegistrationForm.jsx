@@ -23,8 +23,10 @@ const RegistrationForm = ({ setTogggle }) => {
                 toast.success(response?.data?.message);
             }
         } catch (error) {
+            const errorMessage = error?.response?.data?.message || "registration failed. Please try again.";
+            toast.error(errorMessage);
             console.log(error);
-            
+
         }
     };
 
