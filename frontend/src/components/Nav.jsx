@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 const Nav = () => {
   return (
     <nav className="bg-gray-300 shadow-md px-6 py-4 flex justify-between items-center">
-      <h1 className="text-xl font-bold text-blue-600">MyStore</h1>
+      <h1 className="text-xl font-bold text-blue-600">ShopMaster</h1>
 
       <div className="flex gap-6">
         <Link to="/" className="text-gray-700 hover:text-blue-600 transition">
