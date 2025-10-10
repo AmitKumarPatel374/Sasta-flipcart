@@ -5,13 +5,18 @@ import { useContext } from "react";
 import { usercontext } from "../context/DataContext";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-const RegistrationForm = ({ setTogggle }) => {
+
+
+const RegistrationForm = () => {
     const {
         register,
         handleSubmit,
         formState: { errors, isSubmitting },
     } = useForm();
+
+    const navigate = useNavigate();
 
     const [showPassword, setShowPassword] = useState(false);
 
@@ -22,6 +27,7 @@ const RegistrationForm = ({ setTogggle }) => {
             if (response) {
                 toast.success(response?.data?.message);
             }
+            navigate('/login');
         } catch (error) {
             const errorMessage = error?.response?.data?.message || "registration failed. Please try again.";
             toast.error(errorMessage);
@@ -195,7 +201,7 @@ const RegistrationForm = ({ setTogggle }) => {
                     Already have an account?{" "}
                     <button
                         type="button"
-                        onClick={() => setTogggle((prev) => !prev)}
+                        onClick={() => navigate('/login')}
                         className="text-blue-500 hover:underline"
                     >
                         Login

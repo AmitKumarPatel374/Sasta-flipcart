@@ -3,14 +3,18 @@ import { useForm } from "react-hook-form";
 import { Mail, Send, Eye, EyeOff, AwardIcon } from "lucide-react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useContext } from "react";
+import { usercontext } from "../context/DataContext";
+import { useNavigate } from "react-router-dom";
 
-const LoginForm = ({ setTogggle }) => {
+const LoginForm = () => {
     const {
         register,
         handleSubmit,
         formState: { errors, isSubmitting },
     } = useForm();
 
+    const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
 
     const onSubmit = async (data) => {
@@ -20,6 +24,7 @@ const LoginForm = ({ setTogggle }) => {
             if (response) {
                 toast.success(response?.data?.message);
             }
+            navigate('/');
         } catch (error) {
             const errorMessage = error?.response?.data?.message || "Login failed. Please try again.";
             toast.error(errorMessage);
@@ -87,6 +92,17 @@ const LoginForm = ({ setTogggle }) => {
                     {errors.password && (
                         <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>
                     )}
+
+                    //Forgot Password
+                    <div className="text-right mt-2">
+                        <button
+                            type="button"
+                            onClick={() => navigate("/forgot-password")}  // useNavigate hook from react-router-dom
+                            className="text-sm text-blue-500 hover:underline"
+                        >
+                            Forgot Password?
+                        </button>
+                    </div>
                 </div>
 
                 {/* Google Login */}
@@ -117,7 +133,7 @@ const LoginForm = ({ setTogggle }) => {
                     Don't have an account?{" "}
                     <button
                         type="button"
-                        onClick={() => setTogggle((prev) => !prev)}
+                        onClick={() => navigate('/register')}
                         className="text-blue-500 hover:underline"
                     >
                         Register

@@ -1,16 +1,18 @@
-import { Route } from 'lucide-react'
 import React from 'react'
-import { Routes } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import ViewUsers from '../pages/ViewUsers'
+import Home from '../pages/Home'
+import PageNotFound from '../pages/PageNotFound'
 
 
-const adminRoutes = () => {
+const AdminRoutes = () => {
   return (
     <Routes>
-        <Route path='/view-users' element={<ViewUsers />} />
+        <Route path='/' element={<ViewUsers />} />
+        <Route path="*" element={<PageNotFound />} />
     </Routes>
   )
 }
 
-export default adminRoutes
+export default AdminRoutes
 

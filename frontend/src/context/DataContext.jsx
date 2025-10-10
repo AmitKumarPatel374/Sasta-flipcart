@@ -4,10 +4,9 @@ import { createContext } from 'react';
 export const usercontext = createContext(null);
 
 const DataContext = (props) => {
-    const [toggle,setTogggle] = useState(true);
-    // const [users,setUsers] = useState([]);
+    const [toggle,setToggle] = useState(true);
   return (
-    <usercontext.Provider value={{toggle,setTogggle}}>
+    <usercontext.Provider value={{toggle,setToggle}}>
         {props.children}
     </usercontext.Provider>
   )

@@ -4,14 +4,14 @@ import './index.css'
 import App from './App.jsx'
 import { ToastContainer } from "react-toastify";
 import { BrowserRouter } from "react-router-dom";
+import DataContext from './context/DataContext.jsx';
 
 createRoot(document.getElementById('root')).render(
-    <div>
-        <BrowserRouter>
-            <App />
-            <ToastContainer position="top-center" />
-        </BrowserRouter>
-    </div>
-
+        <DataContext>
+            <BrowserRouter>
+                <App />
+                <ToastContainer position="top-right" style={{ top: '60px' }}/>
+            </BrowserRouter>
+        </DataContext>
 
 )

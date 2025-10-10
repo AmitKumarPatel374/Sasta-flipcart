@@ -1,20 +1,23 @@
 import React from 'react'
-import LoginForm from './pages/LoginForm'
-import RegistrationForm from './pages/RegistrationForm'
 import { useState } from 'react';
-import CreateProduct from './pages/CreateProduct';
+import Nav from './components/Nav';
+import ProductRoutes from './routes/productRoutes';
+import AdminRoutes from './routes/adminRoutes';
+import UserRoutes from './routes/UserRoutes';
+import { Route, Routes } from 'react-router-dom';
+
 
 const App = () => {
   const [toggle, setTogggle] = useState(true);
   return (
     <div>
-      {/* {!toggle ? (
-        <RegistrationForm setTogggle={setTogggle}/>
-      ) :
-        (
-          <LoginForm setTogggle={setTogggle}/>
-        )} */}
-        <CreateProduct />
+      <Nav />
+      <Routes>
+        {/* Mount all routes with base paths */}
+        <Route path="/*" element={<UserRoutes />} />
+        <Route path="/admin/*" element={<AdminRoutes />} />
+        <Route path="/product/*" element={<ProductRoutes />} />
+      </Routes>
     </div>
   )
 }
