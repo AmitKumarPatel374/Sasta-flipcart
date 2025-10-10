@@ -7,9 +7,9 @@ const resePassTemp = require("../utils/email.template");
 
 const registerController = async (req, res) => {
     try {
-        let { fullname, email, password, mobile } = req.body;
+        let { fullname, email,username, password, mobile } = req.body;
 
-        if (!fullname || !email || !password || !mobile) {
+        if (!fullname || !email || !username || !password || !mobile) {
             return res.status(404).json({
                 message: "All fields are required",
             });
@@ -24,6 +24,7 @@ const registerController = async (req, res) => {
 
         let newUser = await UserModel.create({
             fullname,
+            username,
             email,
             mobile,
             password,

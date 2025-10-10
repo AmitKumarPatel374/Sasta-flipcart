@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Mail, Send, Eye, EyeOff } from "lucide-react";
+import { Mail, Send, Eye, EyeOff, AwardIcon } from "lucide-react";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const LoginForm = ({ setTogggle }) => {
   const {
@@ -11,9 +13,16 @@ const LoginForm = ({ setTogggle }) => {
 
   const [showPassword, setShowPassword] = useState(false);
 
-  const onSubmit = (data) => {
+  const onSubmit = async(data) => {
     console.log("Login Data:", data);
-    // TODO: axios.post('/api/login', data)
+    try {
+        let response = await axios.post("http://localhost:3000/api/auth/login",data);
+        if (response) {
+            toast.success(response?.data?.message);
+        }
+    } catch (error) {
+        console.log(error);
+    }
   };
 
   const handleGoogleLogin = () => {
