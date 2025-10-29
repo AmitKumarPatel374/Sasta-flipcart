@@ -24,6 +24,12 @@ const LoginForm = () => {
             if (response) {
                 toast.success(response?.data?.message);
             }
+            // console.log(response.data.user.role);
+            
+            localStorage.setItem("role",response.data.user.role);
+            localStorage.setItem("token",response.data.token);
+            window.dispatchEvent(new Event("storage")); // 👈 this updates Nav immediately
+            // console.log(response.data.token);
             navigate('/');
         } catch (error) {
             const errorMessage = error?.response?.data?.message || "Login failed. Please try again.";
@@ -93,7 +99,6 @@ const LoginForm = () => {
                         <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>
                     )}
 
-                    //Forgot Password
                     <div className="text-right mt-2">
                         <button
                             type="button"

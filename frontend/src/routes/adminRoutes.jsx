@@ -8,7 +8,7 @@ import PageNotFound from '../pages/PageNotFound'
 const AdminRoutes = () => {
   return (
     <Routes>
-        <Route path='/' element={<ViewUsers />} />
+        <Route path='/view-users' element={<ViewUsers />} />
         <Route path="*" element={<PageNotFound />} />
     </Routes>
   )

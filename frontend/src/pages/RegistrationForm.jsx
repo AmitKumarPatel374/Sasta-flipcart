@@ -21,7 +21,7 @@ const RegistrationForm = () => {
     const [showPassword, setShowPassword] = useState(false);
 
     const onSubmit = async (data) => {
-        console.log(data);
+        // console.log(data);
         try {
             const response = await axios.post("http://localhost:3000/api/auth/register", data);
             if (response) {
@@ -32,7 +32,6 @@ const RegistrationForm = () => {
             const errorMessage = error?.response?.data?.message || "registration failed. Please try again.";
             toast.error(errorMessage);
             console.log(error);
-
         }
     };
 

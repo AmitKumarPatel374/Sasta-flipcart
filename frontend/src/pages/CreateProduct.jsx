@@ -27,7 +27,6 @@ const CreateProduct = () => {
             images.forEach((image) => {
                 formData.append("images", image);
             })
-
             let response = await axios.post("http://localhost:3000/api/product/create-product", formData, {
                 headers: {
                     "Content-Type": "multipart/form-data"

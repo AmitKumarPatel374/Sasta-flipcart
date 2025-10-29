@@ -7,9 +7,9 @@ const resePassTemp = require("../utils/email.template");
 
 const registerController = async (req, res) => {
     try {
-        let { fullname, email,username, password, mobile } = req.body;
+        let { fullname, email,username, password, mobile,role } = req.body;
 
-        if (!fullname || !email || !username || !password || !mobile) {
+        if (!fullname || !email || !username || !password || !mobile || !role) {
             return res.status(404).json({
                 message: "All fields are required",
             });
@@ -28,6 +28,7 @@ const registerController = async (req, res) => {
             email,
             mobile,
             password,
+            role
         });
 
         let token = newUser.generateToken();
@@ -75,6 +76,7 @@ const loginController = async (req, res) => {
 
         return res.status(200).json({
             message: "user logged in",
+            token,
             user: user,
         });
     } catch (error) {

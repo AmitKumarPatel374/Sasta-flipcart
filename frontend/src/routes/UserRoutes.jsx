@@ -5,6 +5,9 @@ import About from '../pages/About'
 import Home from '../pages/Home'
 import ForgotPassword from '../pages/ForgotPassword'
 import PageNotFound from '../pages/PageNotFound'
+import ViewAllProducts from '../pages/ViewAllProducts'
+import CreateProduct from '../pages/CreateProduct'
+import ViewUsers from '../pages/ViewUsers'
 
 const UserRutes = () => {
     return (
@@ -14,6 +17,9 @@ const UserRutes = () => {
             <Route path='/login' element={<LoginForm />} />
             <Route path='/about' element={<About />} />
             <Route path='/forgot-password' element={<ForgotPassword />} />
+            <Route path='/view-all-product' element={<ViewAllProducts />} />
+            <Route path='/create-product' element={<CreateProduct />} />
+            <Route path='/view-users' element={<ViewUsers />} />
             <Route path="*" element={<PageNotFound />} />
         </Routes>
     )
