@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { toast } from "react-toastify";
+import apiInstance from "../apiInstance";
 
 const CreateProduct = () => {
     const {
@@ -27,7 +28,7 @@ const CreateProduct = () => {
             images.forEach((image) => {
                 formData.append("images", image);
             })
-            let response = await axios.post("http://localhost:3000/api/product/create-product", formData, {
+            let response = await apiInstance.post("/product/create-product", formData, {
                 headers: {
                     "Content-Type": "multipart/form-data"
                 }

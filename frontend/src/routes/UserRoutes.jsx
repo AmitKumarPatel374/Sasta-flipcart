@@ -8,6 +8,7 @@ import PageNotFound from '../pages/PageNotFound'
 import ViewAllProducts from '../pages/ViewAllProducts'
 import CreateProduct from '../pages/CreateProduct'
 import ViewUsers from '../pages/ViewUsers'
+import Profile from '../pages/Profile'
 
 const UserRutes = () => {
     return (
@@ -20,6 +21,7 @@ const UserRutes = () => {
             <Route path='/view-all-product' element={<ViewAllProducts />} />
             <Route path='/create-product' element={<CreateProduct />} />
             <Route path='/view-users' element={<ViewUsers />} />
+            <Route path='/profile' element={<Profile />} />
             <Route path="*" element={<PageNotFound />} />
         </Routes>
     )

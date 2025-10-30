@@ -4,6 +4,7 @@ import { Mail } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import apiInstance from '../apiInstance';
 
 const ForgotPassword = () => {
     const {
@@ -16,7 +17,7 @@ const ForgotPassword = () => {
 
     const onSubmit = async (data) => {
         try {
-            let response = await axios.post("http://localhost:3000/api/auth/forgot-Password", data);
+            let response = await apiInstance.post("/auth/forgot-Password", data);
             if (response) {
                 toast.success(response?.data?.message);
             }

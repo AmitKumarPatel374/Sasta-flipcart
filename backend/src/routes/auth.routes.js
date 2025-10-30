@@ -1,5 +1,5 @@
 const express = require("express");
-const { registerController, loginController, logoutController, forgotPasswordController, resetPasswordController, updatePasswordController } = require("../controllers/auth.controllers");
+const { registerController, loginController, logoutController, forgotPasswordController, resetPasswordController, updatePasswordController, getProfileController } = require("../controllers/auth.controllers");
 const authMiddleware = require("../middlewares/auth.middleware");
 
 
@@ -16,5 +16,7 @@ router.post("/update-Password/:id", updatePasswordController);
 router.post("/register", registerController);
 router.post("/login", loginController);
 router.delete("/logout", logoutController);
+
+router.get('/profile',authMiddleware,getProfileController);
 
 module.exports = router;

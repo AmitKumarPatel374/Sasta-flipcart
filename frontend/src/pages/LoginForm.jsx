@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { useContext } from "react";
 import { usercontext } from "../context/DataContext";
 import { useNavigate } from "react-router-dom";
+import apiInstance from "../apiInstance";
 
 const LoginForm = () => {
     const {
@@ -20,7 +21,7 @@ const LoginForm = () => {
     const onSubmit = async (data) => {
         console.log("Login Data:", data);
         try {
-            let response = await axios.post("http://localhost:3000/api/auth/login", data);
+            let response = await apiInstance.post("/auth/login", data);
             if (response) {
                 toast.success(response?.data?.message);
             }

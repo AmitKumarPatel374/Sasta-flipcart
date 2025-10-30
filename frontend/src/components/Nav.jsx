@@ -37,7 +37,7 @@ const Nav = () => {
               <Link to="/about" className="text-gray-700 hover:text-blue-600 transition">
                 About
               </Link>
-              <Link to="/login" className="text-gray-700 hover:text-blue-600 transition">
+              <Link to="/profile" className="text-gray-700 hover:text-blue-600 transition">
                 Profile
               </Link>
             </div>
@@ -48,10 +48,13 @@ const Nav = () => {
             <Link to="/view-all-product" className="text-gray-700 hover:text-blue-600 transition">
               ViewProducts
             </Link>
+            <Link to="/create-product" className="text-gray-700 hover:text-blue-600 transition">
+              CreateProduct
+            </Link>
             <Link to="/view-users" className="text-gray-700 hover:text-blue-600 transition">
               ViewUsers
             </Link>
-            <Link to="/login" className="text-gray-700 hover:text-blue-600 transition">
+            <Link to="/profile" className="text-gray-700 hover:text-blue-600 transition">
               Profile
             </Link>
           </div>)

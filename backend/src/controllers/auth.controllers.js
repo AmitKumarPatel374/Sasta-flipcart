@@ -221,11 +221,27 @@ const updatePasswordController = async (req, res) => {
     }
 }
 
+const getProfileController=async(req,res)=>{
+    try {
+        let user = req.user; ///authmiddleware sets this
+        return res.status(200).json({
+            message:"profile fetched successfully!",
+            user:user
+        })
+    } catch (error) {
+        return res.status(500).json({
+            message:"internal server error!",
+            error:error
+        })
+    }
+}
+
 module.exports = {
     registerController,
     loginController,
     logoutController,
     forgotPasswordController,
     resetPasswordController,
-    updatePasswordController
+    updatePasswordController,
+    getProfileController
 };

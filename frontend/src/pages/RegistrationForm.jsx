@@ -6,6 +6,7 @@ import { usercontext } from "../context/DataContext";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import apiInstance from "../apiInstance";
 
 
 
@@ -23,7 +24,7 @@ const RegistrationForm = () => {
     const onSubmit = async (data) => {
         // console.log(data);
         try {
-            const response = await axios.post("http://localhost:3000/api/auth/register", data);
+            const response = await apiInstance.post("/auth/register", data);
             if (response) {
                 toast.success(response?.data?.message);
             }
