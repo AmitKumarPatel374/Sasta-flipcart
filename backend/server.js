@@ -10,6 +10,10 @@ const adminRoutes = require("./src/routes/admin.routes");
 const connectDB = require("./src/config/database/db");
 const cacheInstance = require("./src/services/cache.service");
 
+require("./src/services/googleOauth.service");
+const session = require("express-session");
+const passport = require("passport");
+
 
 connectDB();
 const app = express();
@@ -27,6 +31,19 @@ app.use(
   })
 );
 
+//google oauth session so that not need authenticate again and again
+app.use(
+  session({
+    secret: "secret",
+    resave: false,
+    saveUninitialized: true
+  })
+);
+
+// initialize passport
+app.use(passport.initialize());
+app.use(passport.session());
+
 cacheInstance.on("connect", () => {
   console.log("Redis connected successfully");
 });
@@ -42,7 +59,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/product", productRoutes);
 app.use("/api/admin", adminRoutes);
 
-let port = process.env.PORT ||5000;
+
+let port = process.env.PORT || 5000;
 
 app.listen(port, () => {
   console.log(`Server is running on  port ${port}`);

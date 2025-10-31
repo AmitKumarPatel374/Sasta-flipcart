@@ -236,6 +236,15 @@ const getProfileController=async(req,res)=>{
     }
 }
 
+const googleController=async(req,res)=>{
+    try {
+        console.log("user->",req.user);
+        res.redirect("/api/auth/profile");
+    } catch (error) {
+        console.log("error in callback url->",error);
+    }
+}
+
 module.exports = {
     registerController,
     loginController,
@@ -243,5 +252,6 @@ module.exports = {
     forgotPasswordController,
     resetPasswordController,
     updatePasswordController,
-    getProfileController
+    getProfileController,
+    googleController
 };

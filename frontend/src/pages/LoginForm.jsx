@@ -40,7 +40,7 @@ const LoginForm = () => {
     };
 
     const handleGoogleLogin = () => {
-        window.location.href = "https://your-backend.com/auth/google"; // Replace with actual OAuth route
+        window.location.href = "https://sasta-flipcart.onrender.com/api/auth/google"; // Replace with actual OAuth route
     };
 
     return (

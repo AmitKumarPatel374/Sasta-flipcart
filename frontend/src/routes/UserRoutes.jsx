@@ -9,6 +9,7 @@ import ViewAllProducts from '../pages/ViewAllProducts'
 import CreateProduct from '../pages/CreateProduct'
 import ViewUsers from '../pages/ViewUsers'
 import Profile from '../pages/Profile'
+import LoginSuccess from '../components/LoginSuccess'
 
 const UserRutes = () => {
     return (
@@ -22,6 +23,7 @@ const UserRutes = () => {
             <Route path='/create-product' element={<CreateProduct />} />
             <Route path='/view-users' element={<ViewUsers />} />
             <Route path='/profile' element={<Profile />} />
+            {/* <Route path='/login-success' element={<LoginSuccess />} /> */}
             <Route path="*" element={<PageNotFound />} />
         </Routes>
     )
