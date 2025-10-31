@@ -4,10 +4,11 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const sendMail = require("../services/mail.service");
 const resePassTemp = require("../utils/email.template");
+const sendFilesToStorage = require("../services/storage.service");
 
 const registerController = async (req, res) => {
     try {
-        let { fullname, email,username, password, mobile,role } = req.body;
+        let { fullname, email, username, password, mobile, role } = req.body;
 
         if (!fullname || !email || !username || !password || !mobile || !role) {
             return res.status(404).json({
@@ -72,7 +73,12 @@ const loginController = async (req, res) => {
             });
 
         let token = user.generateToken();
-        res.cookie("token", token);
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: false, // ✅ use true in production with HTTPS
+            sameSite: "Lax",
+            maxAge: 60 * 60 * 1000, // 1 hour
+        });
 
         return res.status(200).json({
             message: "user logged in",
@@ -105,6 +111,50 @@ const logoutController = async (req, res) => {
             message: "user logged out successfully!",
         });
 
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: "Internal server error ",
+            error: error,
+        });
+    }
+}
+
+const updateUserController = async (req,res) => {
+    try {
+        let { fullname, email, username, password, mobile, role } = req.body;
+
+        if (!fullname || !email || !username  || !mobile || !role) {
+            return res.status(404).json({
+                message: "All fields are required",
+            });
+        }
+
+        let uploadedImage;
+        if (req.file) {
+            uploadedImage= await sendFilesToStorage(
+                req.file.buffer,
+                req.file.originalname
+            )
+        }
+
+        let updatedUser = await UserModel.findOneAndUpdate(
+            { email },
+            {
+                fullname,
+                email,
+                username,
+                mobile,
+                role,
+                profileLogo:uploadedImage.url || "", 
+            }
+        );
+
+        
+        return res.status(201).json({
+            message: "user updated successfully",
+            user: updatedUser,
+        });
     } catch (error) {
         console.log(error);
         return res.status(500).json({
@@ -193,7 +243,7 @@ const updatePasswordController = async (req, res) => {
             });
         }
 
-        let hashPass = await bcrypt.hash(password,11);
+        let hashPass = await bcrypt.hash(password, 11);
 
         let updatedPassUser = await UserModel.findByIdAndUpdate(
             {
@@ -221,29 +271,48 @@ const updatePasswordController = async (req, res) => {
     }
 }
 
-const getProfileController=async(req,res)=>{
+const getProfileController = async (req, res) => {
     try {
         let user = req.user; ///authmiddleware sets this
         return res.status(200).json({
-            message:"profile fetched successfully!",
-            user:user
+            message: "profile fetched successfully!",
+            user: user
         })
     } catch (error) {
         return res.status(500).json({
-            message:"internal server error!",
-            error:error
+            message: "internal server error!",
+            error: error
         })
     }
 }
 
-const googleController=async(req,res)=>{
+const googleController = async (req, res) => {
     try {
-        console.log("user->",req.user);
-        res.redirect("/api/auth/profile");
+        // console.log("user->",req.user);
+        const profile = req.user;
+
+        // Example: Create/find user in DB
+        let user = await UserModel.findOne({ email: profile.emails[0].value });
+        if (!user) {
+            user = await UserModel.create({
+                fullname: profile.displayName,
+                email: profile.emails[0].value,
+                username: profile.displayName.split(" ")[0],
+                password: "google_auth", // placeholder, not used
+            });
+        }
+
+        const token = user.generateToken();
+        res.cookie("token", token);
+
+        res.redirect("http://localhost:5173");
     } catch (error) {
-        console.log("error in callback url->",error);
+        console.log("error in callback url->", error);
+        res.redirect("http://localhost:5173");
     }
 }
+
+
 
 module.exports = {
     registerController,
@@ -253,5 +322,6 @@ module.exports = {
     resetPasswordController,
     updatePasswordController,
     getProfileController,
-    googleController
+    googleController,
+    updateUserController
 };

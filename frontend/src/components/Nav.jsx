@@ -1,23 +1,28 @@
 import React from 'react';
+import { useContext } from 'react';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { usercontext } from '../context/DataContext';
 
 const Nav = () => {
-  const [token, setToken] = useState(localStorage.getItem("token"));
-  const [role, setRole] = useState(localStorage.getItem("role"));
+  const { token, role } = useContext(usercontext);
+  // const [token, setToken] = useState(localStorage.getItem("token"));
+  // const [role, setRole] = useState(localStorage.getItem("role"));
   let isUser = role === "user";
 
   //when token and role change in localstorage change state
-  useEffect(() => {
-    const handleStorageChange = () => {
-      setToken(localStorage.getItem("token"));
-      setRole(localStorage.getItem("role"));
-    }
+  // useEffect(() => {
+  //   const handleStorageChange = () => {
+  //     setToken(localStorage.getItem("token"));
+  //     setRole(localStorage.getItem("role"));
+  //     console.log(token,role);
+      
+  //   }
 
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener("storage", handleStorageChange);
-  }, []);
+  //   window.addEventListener('storage', handleStorageChange);
+  //   return () => window.removeEventListener("storage", handleStorageChange);
+  // }, []);
 
   return (
     <nav className="bg-gray-300 shadow-md px-6 py-4 flex justify-between items-center">
@@ -37,7 +42,7 @@ const Nav = () => {
               <Link to="/about" className="text-gray-700 hover:text-blue-600 transition">
                 About
               </Link>
-              <Link to="/profile" className="text-gray-700 hover:text-blue-600 transition">
+              <Link to="/user-profile" className="text-gray-700 hover:text-blue-600 transition">
                 Profile
               </Link>
               <Link to="/login" className="text-gray-700 hover:text-blue-600 transition">
@@ -57,7 +62,7 @@ const Nav = () => {
             <Link to="/view-users" className="text-gray-700 hover:text-blue-600 transition">
               ViewUsers
             </Link>
-            <Link to="/profile" className="text-gray-700 hover:text-blue-600 transition">
+            <Link to="/user-profile" className="text-gray-700 hover:text-blue-600 transition">
               Profile
             </Link>
             <Link to="/login" className="text-gray-700 hover:text-blue-600 transition">

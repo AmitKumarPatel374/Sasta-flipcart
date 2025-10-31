@@ -31,6 +31,9 @@ app.use(
   })
 );
 
+app.use(express.json());
+app.use(cookieParser());
+
 //google oauth session so that not need authenticate again and again
 app.use(
   session({
@@ -52,8 +55,7 @@ cacheInstance.on("error", (error) => {
   console.log("Error connecting redis", error);
 });
 
-app.use(express.json());
-app.use(cookieParser());
+
 
 app.use("/api/auth", authRoutes);
 app.use("/api/product", productRoutes);

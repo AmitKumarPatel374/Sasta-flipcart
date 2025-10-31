@@ -15,6 +15,7 @@ const LoginForm = () => {
         formState: { errors, isSubmitting },
     } = useForm();
 
+    const { setToken, setRole } = useContext(usercontext);
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
 
@@ -25,12 +26,9 @@ const LoginForm = () => {
             if (response) {
                 toast.success(response?.data?.message);
             }
-            // console.log(response.data.user.role);
-            
-            localStorage.setItem("role",response.data.user.role);
-            localStorage.setItem("token",response.data.token);
-            window.dispatchEvent(new Event("storage")); // 👈 this updates Nav immediately
-            // console.log(response.data.token);
+
+            setToken(true);
+            setRole(response.data.user.role);
             navigate('/');
         } catch (error) {
             const errorMessage = error?.response?.data?.message || "Login failed. Please try again.";
@@ -40,7 +38,9 @@ const LoginForm = () => {
     };
 
     const handleGoogleLogin = () => {
-        window.location.href = "https://sasta-flipcart.onrender.com/api/auth/google"; // Replace with actual OAuth route
+        window.location.href = "http://localhost:3000/api/auth/google"; 
+        setToken(true);
+        setRole("user");
     };
 
     return (

@@ -10,6 +10,7 @@ import CreateProduct from '../pages/CreateProduct'
 import ViewUsers from '../pages/ViewUsers'
 import Profile from '../pages/Profile'
 import LoginSuccess from '../components/LoginSuccess'
+import UpdateProfile from '../pages/UpdateUserProfile'
 
 const UserRutes = () => {
     return (
@@ -22,7 +23,8 @@ const UserRutes = () => {
             <Route path='/view-all-product' element={<ViewAllProducts />} />
             <Route path='/create-product' element={<CreateProduct />} />
             <Route path='/view-users' element={<ViewUsers />} />
-            <Route path='/profile' element={<Profile />} />
+            <Route path='/user-profile' element={<Profile />} />
+            <Route path='/update-user-profile' element={<UpdateProfile />} />
             {/* <Route path='/login-success' element={<LoginSuccess />} /> */}
             <Route path="*" element={<PageNotFound />} />
         </Routes>

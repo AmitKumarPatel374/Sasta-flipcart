@@ -32,6 +32,9 @@ const userSchema = new mongoose.Schema(
             enum: ["user", "seller"],
             default: "user",
         },
+        profileLogo:{
+            type:String
+        },
         products: [
             {
                 type: mongoose.Schema.Types.ObjectId,
