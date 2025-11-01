@@ -8,9 +8,9 @@ const UpdateProduct = () => {
   const navigate = useNavigate();
 
   const [product, setProduct] = useState({});
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState([]); // existing + new URLs
   const [newFiles, setNewFiles] = useState([]);
-  // const [newImageUxRL, setNewImageURL] = useState("");
+  const [newImageURL, setNewImageURL] = useState("");
 
   // ✅ Fetch product details
   useEffect(() => {
@@ -46,13 +46,19 @@ const UpdateProduct = () => {
     setNewFiles((prev) => [...prev, ...files]);
   };
 
-  // ✅ Add image URL
-  // const handleAddImageURL = () => {
-  //   if (newImageURL.trim() !== "") {
-  //     setImages((prev) => [...prev, newImageURL.trim()]);
-  //     setNewImageURL("");
-  //   }
-  // };
+  // ✅ Add new image URL
+  const handleAddImageURL = () => {
+    if (newImageURL.trim() !== "") {
+      setImages((prev) => [...prev, newImageURL.trim()]);
+      setNewImageURL("");
+      toast.success("Image added via URL");
+    }
+  };
+
+  // ✅ Delete an existing image (by URL)
+  const handleDeleteImage = (url) => {
+    setImages((prev) => prev.filter((img) => img !== url));
+  };
 
   // ✅ Submit form
   const handleSubmit = async (e) => {
@@ -81,7 +87,7 @@ const UpdateProduct = () => {
       // ✅ Add uploaded files
       newFiles.forEach((file) => formData.append("images", file));
 
-      // ✅ Keep all existing + newly added URLs
+      // ✅ Add existing + URL-based images
       formData.append("existingImages", JSON.stringify(images));
 
       const response = await apiInstance.put(
@@ -105,7 +111,7 @@ const UpdateProduct = () => {
     try {
       await apiInstance.delete(`/product/delete-product/${product_id}`);
       toast.success("Product deleted successfully");
-      navigate("/");
+      navigate("/view-all-product");
     } catch (error) {
       toast.error("Failed to delete product");
     }
@@ -169,6 +175,7 @@ const UpdateProduct = () => {
               required
             />
           </div>
+
           <div>
             <label className="block font-medium mb-1">Amount</label>
             <input
@@ -180,6 +187,7 @@ const UpdateProduct = () => {
               required
             />
           </div>
+
           <div>
             <label className="block font-medium mb-1">Currency</label>
             <input
@@ -253,23 +261,37 @@ const UpdateProduct = () => {
         <div className="border-t pt-4">
           <label className="block font-semibold mb-2">Product Images</label>
 
-          {/* Show existing images */}
+          {/* Existing Images with Delete */}
           <div className="flex gap-4 flex-wrap mb-3">
             {images.map((url, index) => (
-              <img
-                key={index}
-                src={url}
-                alt={`Product ${index}`}
-                className="w-24 h-24 rounded-lg object-cover border"
-              />
+              <div key={index} className="relative">
+                <img
+                  src={url}
+                  alt={`Product ${index}`}
+                  className="w-24 h-24 rounded-lg object-cover border"
+                />
+                <button
+                  type="button"
+                  onClick={() => handleDeleteImage(url)}
+                  className="absolute top-0 right-0 bg-red-600 text-white rounded-full px-1.5 py-0.5 text-xs"
+                >
+                  ✕
+                </button>
+              </div>
             ))}
           </div>
 
           {/* Upload new files */}
-          <input type="file" multiple onChange={handleFileChange} className="mb-2" />
+          <input
+            type="file"
+            multiple
+            onChange={handleFileChange}
+            className="mb-3 block w-full cursor-pointer rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm text-gray-700 file:mr-4 file:rounded-lg file:border-0 file:bg-blue-600 file:px-4 file:py-2 file:text-sm file:font-medium file:text-white hover:file:bg-blue-700 focus:outline-none"
+          />
 
-          {/* Add image URL */}
-          {/* <div className="flex gap-2">
+
+          {/* Add image via URL */}
+          <div className="flex gap-2">
             <input
               type="text"
               placeholder="Add image URL"
@@ -280,18 +302,18 @@ const UpdateProduct = () => {
             <button
               type="button"
               onClick={handleAddImageURL}
-              className="bg-blue-600 text-white px-4 rounded hover:bg-blue-700"
+              className="bg-blue-600 cursor-pointer text-white px-4 rounded hover:bg-blue-700"
             >
-              Add
+              Add URL
             </button>
-          </div> */}
+          </div>
         </div>
 
         {/* Buttons */}
         <div className="flex justify-between mt-6">
           <button
             type="submit"
-            className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700"
+            className="bg-green-600 cursor-pointer text-white px-6 py-2 rounded-lg hover:bg-green-700"
           >
             🔄 Update Product
           </button>
@@ -299,7 +321,7 @@ const UpdateProduct = () => {
           <button
             type="button"
             onClick={handleDeleteProduct}
-            className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700"
+            className="bg-red-600 cursor-pointer text-white px-6 py-2 rounded-lg hover:bg-red-700"
           >
             🗑️ Delete Product
           </button>

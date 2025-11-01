@@ -31,7 +31,7 @@ const ViewAllProducts = () => {
   const deleteHandler = async (id) => {
     try {
       const resonse = await apiInstance.delete(`/product/delete-product/${id}`);
-      setProducts((prevProducts)=>prevProducts.filter((p)=>p._id != id));
+      setProducts((prevProducts) => prevProducts.filter((p) => p._id != id));
       toast.success(resonse.data.message);
     } catch (error) {
       console.log("error in deleting->", error);
@@ -94,15 +94,19 @@ const ViewAllProducts = () => {
                 )}
 
                 {/* 🔖 Discount Badge */}
-                {product.price?.discount > 0 && (
-                  <div className="absolute top-7 left-2 bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded-full shadow">
-                    {(
-                      ((product.price.MRP - product.price.amount) /
-                        product.price.MRP) *
-                      100
-                    ).toFixed(0)}% OFF
-                  </div>
-                )}
+                {product.price && (
+                  ((product.price.MRP - product.price.amount) /
+                    product.price.MRP) *
+                  100
+                ) > 0 && (
+                    <div className="absolute top-7 left-2 bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded-full shadow">
+                      {(
+                        ((product.price.MRP - product.price.amount) /
+                          product.price.MRP) *
+                        100
+                      ).toFixed(0)}% OFF
+                    </div>
+                  )}
               </div>
 
               {/* 🧾 Product Info */}

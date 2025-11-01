@@ -113,15 +113,19 @@ const updateProductController = async (req, res) => {
             })
         }
 
-        let uploadedImage;
+        let existingImages = JSON.parse(req.body.existingImages || "[]"); // पुरानी images
+        let finalImages = [...existingImages];
 
-        if (req.files) {
-            uploadedImage = await Promise.all(
+        if (req.files && req.files.length > 0) {
+            const uploadedImages = await Promise.all(
                 req.files.map(async (elem) => {
                     return await sendFilesToStorage(elem.buffer, elem.originalname);
                 })
-            )
+            );
+            // merge old + new
+            finalImages = [...finalImages, ...uploadedImages.map((img) => img.url)];
         }
+
 
         let updatedProduct = await productModel.findByIdAndUpdate(
             {
@@ -137,7 +141,7 @@ const updateProductController = async (req, res) => {
                 specialOffer,
                 warrenty,
                 specifications,
-                images: uploadedImage.map((elem) => elem.url)
+                images: finalImages
             },
             {
                 new: true
@@ -211,7 +215,7 @@ const productDetailController = async (req, res) => {
             product: product
         })
     } catch (error) {
-        console.log("error in fetched product->",error);
+        console.log("error in fetched product->", error);
         return res.status(500).json({
             message: "internal server error!",
         })

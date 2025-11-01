@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { usercontext } from "../context/DataContext";
 
 const LandingPage = () => {
+
+  const {token} = useContext(usercontext);
 
   const navigate=useNavigate();
   return (
@@ -25,10 +28,10 @@ const LandingPage = () => {
 
         {/* Call to Action Buttons */}
         <div className="flex justify-center gap-6 mb-10">
-          <button onClick={()=>navigate("/view-all-product")} className="bg-blue-600 cursor-pointer text-white px-6 py-3 rounded-md font-semibold hover:bg-blue-700 transition">
+          <button onClick={()=>token?navigate("/view-all-product"):navigate("/login")} className="bg-blue-600 cursor-pointer text-white px-6 py-3 rounded-md font-semibold hover:bg-blue-700 transition">
             Shop Now
           </button>
-          <button onClick={()=>navigate("/about")} className="border border-blue-600 cursor-pointer text-blue-600 px-6 py-3 rounded-md font-semibold hover:bg-blue-50 transition">
+          <button onClick={()=>token?navigate("/about"):navigate("/login")} className="border border-blue-600 cursor-pointer text-blue-600 px-6 py-3 rounded-md font-semibold hover:bg-blue-50 transition">
             Learn More
           </button>
         </div>

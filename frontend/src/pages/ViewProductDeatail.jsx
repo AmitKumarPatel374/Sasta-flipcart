@@ -72,9 +72,9 @@ const ViewProductDetail = () => {
               alt={title}
               className="w-[90%] object-contain transform transition-transform duration-300 group-hover:scale-105"
             />
-            {price?.discount && (
+            {price && ((price.MRP-price.amount)/price.MRP*100) && (
               <span className="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 text-sm font-semibold rounded-lg shadow-md">
-                {price.discount}% OFF
+                {((price.MRP-price.amount)/price.MRP*100).toFixed(0)}% OFF
               </span>
             )}
           </div>
@@ -156,16 +156,16 @@ const ViewProductDetail = () => {
 
           {/* Buttons */}
           <div className="flex gap-4 mt-6">
-            <button className="flex-1 px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl shadow-md hover:bg-blue-700 hover:shadow-lg transform hover:-translate-y-0.5 transition">
+            <button className="flex-1 cursor-pointer px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl shadow-md hover:bg-blue-700 hover:shadow-lg transform hover:-translate-y-0.5 transition">
               🛒 Add to Cart
             </button>
-            <button className="flex-1 px-6 py-3 bg-green-600 text-white font-semibold rounded-xl shadow-md hover:bg-green-700 hover:shadow-lg transform hover:-translate-y-0.5 transition">
+            <button className="flex-1 cursor-pointer px-6 py-3 bg-green-600 text-white font-semibold rounded-xl shadow-md hover:bg-green-700 hover:shadow-lg transform hover:-translate-y-0.5 transition">
               ⚡ Buy Now
             </button>
             {role === 'seller' ? (
               <button
               onClick={()=>navigate(`/update-product/${product_id}`)}
-              className="flex-1 px-6 py-3 bg-gray-600 text-white font-semibold rounded-xl shadow-md hover:bg-gray-700 hover:shadow-lg transform hover:-translate-y-0.5 transition">
+              className="flex-1 cursor-pointer px-6 py-3 bg-gray-600 text-white font-semibold rounded-xl shadow-md hover:bg-gray-700 hover:shadow-lg transform hover:-translate-y-0.5 transition">
                 🔁 Update Product
               </button>
             ) : null}
