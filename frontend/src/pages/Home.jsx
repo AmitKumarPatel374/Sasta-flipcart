@@ -1,6 +1,9 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const LandingPage = () => {
+
+  const navigate=useNavigate();
   return (
     <div className="min-h-screen bg-white flex flex-col items-center justify-center px-6 py-12">
       {/* Logo */}
@@ -22,10 +25,10 @@ const LandingPage = () => {
 
         {/* Call to Action Buttons */}
         <div className="flex justify-center gap-6 mb-10">
-          <button className="bg-blue-600 text-white px-6 py-3 rounded-md font-semibold hover:bg-blue-700 transition">
+          <button onClick={()=>navigate("/view-all-product")} className="bg-blue-600 cursor-pointer text-white px-6 py-3 rounded-md font-semibold hover:bg-blue-700 transition">
             Shop Now
           </button>
-          <button className="border border-blue-600 text-blue-600 px-6 py-3 rounded-md font-semibold hover:bg-blue-50 transition">
+          <button onClick={()=>navigate("/about")} className="border border-blue-600 cursor-pointer text-blue-600 px-6 py-3 rounded-md font-semibold hover:bg-blue-50 transition">
             Learn More
           </button>
         </div>

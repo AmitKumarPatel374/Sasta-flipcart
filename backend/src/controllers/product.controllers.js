@@ -36,22 +36,31 @@ const getAllProductController = async (req, res) => {
 
 const createProductController = async (req, res) => {
     try {
-        let { title, description, amount, currency } = req.body;
+        let { title, brand, description, color, price, size, specialOffer, warrenty, specifications } = req.body;
+
+        if (price) {
+            try {
+                price = JSON.parse(price);
+            } catch {
+                return res.status(400).json({ message: "Invalid price format" });
+            }
+        }
 
         if (!req.files) {
             return res.status(404).json({
                 message: "Images is required",
             })
         }
-        
+
         let uploadedImageUrl = await Promise.all(
-            req.files.map(async(elem)=>{
-                return await sendFilesToStorage(elem.buffer,elem.originalname);
+            req.files.map(async (elem) => {
+                return await sendFilesToStorage(elem.buffer, elem.originalname);
             })
         )
-        
 
-        if (!title || !description || !amount || !currency) {
+
+        if (!title || !description || !brand || !color || !specialOffer || !warrenty || !specifications || !price?.MRP ||
+            !price?.amount || !price?.currency) {
             return res.status(404).json({
                 message: "All fields are required",
             });
@@ -59,11 +68,14 @@ const createProductController = async (req, res) => {
 
         let newProduct = await ProductModel.create({
             title,
+            brand,
             description,
-            price: {
-                amount,
-                currency
-            },
+            price,
+            color,
+            size,
+            specialOffer,
+            warrenty,
+            specifications,
             images: uploadedImageUrl.map((elem) => elem.url),
         })
 
@@ -85,7 +97,15 @@ const updateProductController = async (req, res) => {
     try {
         let product_id = req.params.product_id;
 
-        let { title, description, amount, currency } = req.body;
+        let { title, brand, description, color, size, specialOffer, warrenty, specifications, price } = req.body;
+
+        if (price) {
+            try {
+                price = JSON.parse(price);
+            } catch {
+                return res.status(400).json({ message: "Invalid price format" });
+            }
+        }
 
         if (!product_id) {
             return res.status(404).json({
@@ -109,11 +129,14 @@ const updateProductController = async (req, res) => {
             },
             {
                 title,
+                brand,
                 description,
-                price: {
-                    amount,
-                    currency
-                },
+                price,
+                color,
+                size,
+                specialOffer,
+                warrenty,
+                specifications,
                 images: uploadedImage.map((elem) => elem.url)
             },
             {
@@ -165,10 +188,42 @@ const deleteProductController = async (req, res) => {
     }
 }
 
+const productDetailController = async (req, res) => {
+    try {
+        const product_id = req.params.product_id;
+
+        if (!product_id) {
+            return res.status(404).json({
+                message: "id not found",
+            })
+        }
+
+        const product = await productModel.findById(product_id);
+
+        if (!product) {
+            return res.status(404).json({
+                message: "product not found with this id!",
+            })
+        }
+
+        return res.status(200).json({
+            message: "product fetched!",
+            product: product
+        })
+    } catch (error) {
+        console.log("error in fetched product->",error);
+        return res.status(500).json({
+            message: "internal server error!",
+        })
+    }
+
+}
+
 
 module.exports = {
     createProductController,
     getAllProductController,
     updateProductController,
-    deleteProductController
+    deleteProductController,
+    productDetailController
 }

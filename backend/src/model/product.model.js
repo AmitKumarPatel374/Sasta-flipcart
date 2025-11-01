@@ -6,11 +6,19 @@ const productSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
+        brand: {
+            type: String,
+            required: true,
+        },
         description: {
             type: String,
             required: true,
         },
         price: {
+            MRP: {
+                type: Number,
+                required: true,
+            },
             amount: {
                 type: Number,
                 required: true,
@@ -19,7 +27,25 @@ const productSchema = new mongoose.Schema(
                 type: String,
                 enum: ["INR", "DOLLAR"],
                 default: "INR",
-            },
+            }
+        },
+        color: {
+            type: String,
+            required: true,
+        },
+        size: {
+            type: String,
+        },
+        specialOffer:{
+            type: String,
+        },
+        warrenty: {
+            type: String,
+            required: true,
+        },
+        specifications: {
+            type: String,
+            required: true,
         },
         images: {
             type: [],

@@ -37,7 +37,9 @@ const RegistrationForm = () => {
     };
 
     const handleGoogleLogin = () => {
-        window.location.href = "https://your-backend.com/auth/google"; // Replace with actual route
+        window.location.href = "http://localhost:3000/api/auth/google"; 
+        setToken(true);
+        setRole("user");
     };
 
     return (
@@ -146,7 +148,7 @@ const RegistrationForm = () => {
                         />
                         <button
                             type="button"
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+                            className="absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 text-gray-500"
                             onClick={() => setShowPassword((prev) => !prev)}
                         >
                             {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -177,7 +179,7 @@ const RegistrationForm = () => {
                 <button
                     type="button"
                     onClick={handleGoogleLogin}
-                    className="w-full border border-gray-300 bg-white hover:bg-gray-100 text-gray-700 font-medium py-2 rounded-md text-sm flex items-center justify-center gap-2"
+                    className="w-full border border-gray-300 cursor-pointer bg-white hover:bg-gray-100 text-gray-700 font-medium py-2 rounded-md text-sm flex items-center justify-center gap-2"
                 >
                     <img
                         src="https://developers.google.com/identity/images/g-logo.png"
@@ -191,7 +193,7 @@ const RegistrationForm = () => {
                 <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-md text-sm transition"
+                    className="w-full bg-blue-600 cursor-pointer hover:bg-blue-700 text-white font-semibold py-2 rounded-md text-sm transition"
                 >
                     {isSubmitting ? "Submitting..." : "Sign Up"}
                 </button>
@@ -202,7 +204,7 @@ const RegistrationForm = () => {
                     <button
                         type="button"
                         onClick={() => navigate('/login')}
-                        className="text-blue-500 hover:underline"
+                        className="text-blue-500 cursor-pointer hover:underline"
                     >
                         Login
                     </button>

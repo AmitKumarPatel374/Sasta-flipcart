@@ -299,6 +299,7 @@ const googleController = async (req, res) => {
                 email: profile.emails[0].value,
                 username: profile.displayName.split(" ")[0],
                 password: "google_auth", // placeholder, not used
+                profileLogo: profile.photos[0].value,
             });
         }
 

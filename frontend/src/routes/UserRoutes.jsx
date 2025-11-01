@@ -11,6 +11,8 @@ import ViewUsers from '../pages/ViewUsers'
 import Profile from '../pages/Profile'
 import LoginSuccess from '../components/LoginSuccess'
 import UpdateProfile from '../pages/UpdateUserProfile'
+import ViewProductDeatail from '../pages/ViewProductDeatail'
+import UpdateProduct from '../pages/UpdateProduct'
 
 const UserRutes = () => {
     return (
@@ -22,9 +24,11 @@ const UserRutes = () => {
             <Route path='/forgot-password' element={<ForgotPassword />} />
             <Route path='/view-all-product' element={<ViewAllProducts />} />
             <Route path='/create-product' element={<CreateProduct />} />
+            <Route path='/update-product/:product_id' element={<UpdateProduct />} />
             <Route path='/view-users' element={<ViewUsers />} />
             <Route path='/user-profile' element={<Profile />} />
             <Route path='/update-user-profile' element={<UpdateProfile />} />
+            <Route path='/detail/:product_id' element={<ViewProductDeatail />} />
             {/* <Route path='/login-success' element={<LoginSuccess />} /> */}
             <Route path="*" element={<PageNotFound />} />
         </Routes>

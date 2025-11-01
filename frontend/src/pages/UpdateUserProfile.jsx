@@ -203,7 +203,7 @@ const UpdateProfile = () => {
                 {/* Submit Button */}
                 <button
                     type="submit"
-                    className="mt-6 w-full bg-green-500 text-white py-2 rounded-md font-semibold hover:bg-green-600 transition-all"
+                    className="cursor-pointer mt-6 w-full bg-green-500 text-white py-2 rounded-md font-semibold hover:bg-green-600 transition-all"
                 >
                     Update Profile
                 </button>

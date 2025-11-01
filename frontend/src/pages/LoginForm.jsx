@@ -90,7 +90,7 @@ const LoginForm = () => {
                         />
                         <button
                             type="button"
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+                            className="absolute right-3 cursor-pointer top-1/2 -translate-y-1/2 text-gray-500"
                             onClick={() => setShowPassword((prev) => !prev)}
                         >
                             {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -104,7 +104,7 @@ const LoginForm = () => {
                         <button
                             type="button"
                             onClick={() => navigate("/forgot-password")}  // useNavigate hook from react-router-dom
-                            className="text-sm text-blue-500 hover:underline"
+                            className="text-sm cursor-pointer text-blue-500 hover:underline"
                         >
                             Forgot Password?
                         </button>
@@ -115,7 +115,7 @@ const LoginForm = () => {
                 <button
                     type="button"
                     onClick={handleGoogleLogin}
-                    className="w-full border border-gray-300 bg-white hover:bg-gray-100 text-gray-700 font-medium py-2 rounded-md text-sm flex items-center justify-center gap-2"
+                    className="w-full cursor-pointer border border-gray-300 bg-white hover:bg-gray-100 text-gray-700 font-medium py-2 rounded-md text-sm flex items-center justify-center gap-2"
                 >
                     <img
                         src="https://developers.google.com/identity/images/g-logo.png"
@@ -129,7 +129,7 @@ const LoginForm = () => {
                 <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-md text-sm transition"
+                    className="w-full cursor-pointer bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-md text-sm transition"
                 >
                     {isSubmitting ? "Logging in..." : "Login"}
                 </button>
@@ -140,7 +140,7 @@ const LoginForm = () => {
                     <button
                         type="button"
                         onClick={() => navigate('/register')}
-                        className="text-blue-500 hover:underline"
+                        className="text-blue-500 cursor-pointer hover:underline"
                     >
                         Register
                     </button>
