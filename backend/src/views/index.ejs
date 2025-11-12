@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Password Reset</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* 🌈 Animated background gradient */
+      @keyframes gradientShift {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      body {
+        background: linear-gradient(-45deg, #6a6472, #abacbb, #c8c4cf, #ebecee);
+        background-size: 300% 300%;
+        animation: gradientShift 10s ease infinite;
+      }
+
+      /* ✨ Smooth card entry animation */
+      .fade-in {
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeIn 1s ease forwards;
+      }
+      @keyframes fadeIn {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* 🫧 Floating logo animation */
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+      .float {
+        animation: float 3s ease-in-out infinite;
+      }
+    </style>
+  </head>
+
+  <body class="flex flex-col items-center justify-center min-h-screen px-4 text-gray-800">
+    <!-- 🌟 Logo -->
+    <div class="mb-6 text-center">
+      <img
+        src="https://ik.imagekit.io/amit374/n23/myLogo.png?updatedAt=1762869433221"
+        alt="ShopMaster Logo"
+        class="float h-24 w-auto mx-auto drop-shadow-lg"
+      />
+      <h1 class="text-2xl sm:text-3xl font-bold text-white mt-3">ShopMaster</h1>
+    </div>
+
+    <!-- 🧩 Reset Card -->
+    <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md fade-in">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Reset Your Password</h2>
+
+      <form
+        action="http://localhost:3000/api/auth/update-Password/<%=id%>"
+        method="post"
+        class="flex flex-col gap-4"
+        id="resetForm"
+      >
+        <input
+          type="password"
+          name="password"
+          id="inp1"
+          placeholder="New password"
+          class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
+          required
+        />
+
+        <input
+          type="password"
+          id="inp2"
+          placeholder="Confirm password"
+          class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
+          required
+        />
+
+        <button
+          id="btn"
+          class="bg-gradient-to-r from-indigo-500 via-purple-500 to-blue-500 text-white font-semibold py-3 rounded-lg transition-all duration-300 hover:scale-[1.02] hover:shadow-lg"
+        >
+          Submit
+        </button>
+      </form>
+
+      <p class="text-sm text-gray-500 mt-4 text-center">
+        Make sure both passwords match before submitting
+      </p>
+    </div>
+
+    <!-- ✅ Script -->
+    <script>
+      const inp1 = document.querySelector("#inp1")
+      const inp2 = document.querySelector("#inp2")
+      const form = document.querySelector("#resetForm")
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault()
+
+        if (inp1.value !== inp2.value) {
+          alert("Passwords do not match!")
+          return
+        }
+
+        // Optional: add button animation feedback
+        const btn = document.querySelector("#btn")
+        btn.innerText = "Resetting..."
+        btn.disabled = true
+
+        setTimeout(() => {
+          alert("Password reset successfully!")
+          form.submit()
+        }, 800)
+      })
+    </script>
+  </body>
+</html>
