@@ -1,7 +1,11 @@
-import { useState, useEffect } from "react";
-import apiInstance from '../config/apiInstance';
+import { useState, useEffect, useRef } from "react";
+import apiInstance from "../config/apiInstance";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const UpdateProfile = () => {
   const [user, setUser] = useState(null);
@@ -9,6 +13,7 @@ const UpdateProfile = () => {
   const [error, setError] = useState(null);
   const [profilePreview, setProfilePreview] = useState(null);
   const navigate = useNavigate();
+  const formRef = useRef(null);
 
   // Fetch current user data
   const fetchUser = async () => {
@@ -30,6 +35,62 @@ const UpdateProfile = () => {
   useEffect(() => {
     fetchUser();
   }, []);
+
+  // ✅ GSAP Animations
+  useEffect(() => {
+    if (user) {
+      const ctx = gsap.context(() => {
+        // Fade in form
+        gsap.fromTo(
+          ".form-wrapper",
+          { opacity: 0, y: 60 },
+          { opacity: 1, y: 0, duration: 1, ease: "power3.out" }
+        );
+
+        // Profile image scale + fade
+        gsap.fromTo(
+          ".profile-img",
+          { opacity: 0, scale: 0.8 },
+          {
+            opacity: 1,
+            scale: 1,
+            duration: 1.2,
+            ease: "back.out(1.7)",
+            delay: 0.2,
+          }
+        );
+
+        // Sequential field animation
+        gsap.fromTo(
+          ".input-field",
+          { opacity: 0, y: 20 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: "power2.out",
+            stagger: 0.15,
+            delay: 0.4,
+          }
+        );
+
+        // Submit button bounce
+        gsap.fromTo(
+          ".submit-btn",
+          { opacity: 0, scale: 0.9 },
+          {
+            opacity: 1,
+            scale: 1,
+            duration: 0.8,
+            ease: "back.out(1.8)",
+            delay: 1.2,
+          }
+        );
+      }, formRef);
+
+      return () => ctx.revert();
+    }
+  }, [user]);
 
   // Handle input changes
   const handleChange = (e) => {
@@ -84,7 +145,7 @@ const UpdateProfile = () => {
 
   if (loading)
     return (
-      <div className="flex justify-center items-center min-h-screen">
+      <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-indigo-100 via-white to-blue-100">
         <p className="text-lg font-semibold text-gray-600 animate-pulse">
           Loading...
         </p>
@@ -93,16 +154,19 @@ const UpdateProfile = () => {
 
   if (error)
     return (
-      <div className="flex justify-center items-center min-h-screen">
+      <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-indigo-100 via-white to-blue-100">
         <p className="text-red-500 text-lg">{error}</p>
       </div>
     );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 flex items-center justify-center px-4 py-10">
+    <div
+      ref={formRef}
+      className="min-h-screen bg-gray-100 flex items-center justify-center px-4 py-10 "
+    >
       <form
         onSubmit={handleSubmit}
-        className="bg-white shadow-2xl rounded-2xl p-6 sm:p-8 w-full max-w-md sm:max-w-lg border border-gray-100"
+        className="form-wrapper bg-gradient-to-br from-gray-300 via-white to-blue-200 shadow-2xl rounded-2xl p-6 sm:p-8 w-full max-w-md sm:max-w-lg border border-gray-300"
       >
         {/* Header */}
         <h2 className="text-2xl sm:text-3xl font-bold text-center text-gray-800 mb-6">
@@ -115,10 +179,10 @@ const UpdateProfile = () => {
             <img
               src={profilePreview}
               alt="Profile"
-              className="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover border-4 border-blue-500 shadow-md"
+              className="profile-img w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover border-4 border-blue-500 shadow-md"
             />
           ) : (
-            <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white text-3xl font-bold shadow-md">
+            <div className="profile-img w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white text-3xl font-bold shadow-md">
               {user.fullname?.[0]?.toUpperCase()}
             </div>
           )}
@@ -146,7 +210,7 @@ const UpdateProfile = () => {
 
         {/* Input Fields */}
         <div className="space-y-4">
-          <div>
+          <div className="input-field">
             <label className="block text-sm font-medium text-gray-700">
               Full Name
             </label>
@@ -159,7 +223,7 @@ const UpdateProfile = () => {
             />
           </div>
 
-          <div>
+          <div className="input-field">
             <label className="block text-sm font-medium text-gray-700">
               Username
             </label>
@@ -172,7 +236,7 @@ const UpdateProfile = () => {
             />
           </div>
 
-          <div>
+          <div className="input-field">
             <label className="block text-sm font-medium text-gray-700">
               Email
             </label>
@@ -185,7 +249,7 @@ const UpdateProfile = () => {
             />
           </div>
 
-          <div>
+          <div className="input-field">
             <label className="block text-sm font-medium text-gray-700">
               Mobile
             </label>
@@ -198,7 +262,7 @@ const UpdateProfile = () => {
             />
           </div>
 
-          <div>
+          <div className="input-field">
             <label className="block text-sm font-medium text-gray-700">
               Role
             </label>
@@ -215,7 +279,7 @@ const UpdateProfile = () => {
         {/* Submit */}
         <button
           type="submit"
-          className="mt-6 w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-md font-semibold text-sm sm:text-base transition-all"
+          className="submit-btn mt-6 w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-md font-semibold text-sm sm:text-base transition-all"
         >
           Update Profile
         </button>
