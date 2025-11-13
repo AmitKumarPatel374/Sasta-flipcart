@@ -1,26 +1,28 @@
-import React, { useContext, useRef, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
-import apiInstance from "../config/apiInstance";
-import { useNavigate } from "react-router-dom";
-import { usercontext } from "../context/DataContext";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import React, { useContext, useRef, useEffect, useState } from "react"
+import { useForm } from "react-hook-form"
+import { toast } from "react-toastify"
+import apiInstance from "../config/apiInstance"
+import { useNavigate } from "react-router-dom"
+import { usercontext } from "../context/DataContext"
+import { gsap } from "gsap"
+import { ScrollTrigger } from "gsap/ScrollTrigger"
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger)
 
 const CreateProduct = () => {
   const {
     register,
     handleSubmit,
     reset,
+    watch,
+    setValue,
     formState: { errors, isSubmitting },
-  } = useForm();
+  } = useForm()
 
-  const navigate = useNavigate();
-  const { user_id } = useContext(usercontext);
-  const [images, setImages] = useState([]);
-  const formRef = useRef(null);
+  const navigate = useNavigate()
+  const { user_id } = useContext(usercontext)
+  const [images, setImages] = useState([])
+  const formRef = useRef(null)
 
   // ✅ GSAP animations
   useEffect(() => {
@@ -29,7 +31,7 @@ const CreateProduct = () => {
         ".form-wrapper",
         { opacity: 0, y: 60 },
         { opacity: 1, y: 0, duration: 1.2, ease: "power3.out" }
-      );
+      )
 
       gsap.fromTo(
         ".input-field",
@@ -42,7 +44,7 @@ const CreateProduct = () => {
           stagger: 0.1,
           delay: 0.4,
         }
-      );
+      )
 
       gsap.fromTo(
         ".submit-btn",
@@ -54,50 +56,65 @@ const CreateProduct = () => {
           ease: "back.out(1.7)",
           delay: 1.2,
         }
-      );
-    }, formRef);
+      )
+    }, formRef)
 
-    return () => ctx.revert();
-  }, []);
+    return () => ctx.revert()
+  }, [])
 
   // ✅ Submit Product
   const onSubmit = async (data) => {
     try {
-      const formData = new FormData();
-      formData.append("title", data.title);
-      formData.append("brand", data.brand);
-      formData.append("description", data.description);
-      formData.append("color", data.color);
-      formData.append("size", data.size);
-      formData.append("specialOffer", data.specialOffer);
-      formData.append("warrenty", data.warrenty);
-      formData.append("specifications", data.specifications);
+      const formData = new FormData()
+      formData.append("title", data.title)
+      formData.append("brand", data.brand)
+      formData.append("description", data.description)
+      formData.append("color", data.color)
+      formData.append("size", data.size)
+      formData.append("specialOffer", data.specialOffer)
+      formData.append("warrenty", data.warrenty)
+      formData.append("specifications", data.specifications)
 
       const price = {
         MRP: data.MRP,
         amount: data.amount,
         currency: data.currency,
-      };
-      formData.append("price", JSON.stringify(price));
-      images.forEach((img) => formData.append("images", img));
+      }
+      formData.append("price", JSON.stringify(price))
+      images.forEach((img) => formData.append("images", img))
 
-      const response = await apiInstance.post(
-        "/product/create-product",
-        formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
+      const response = await apiInstance.post("/product/create-product", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      })
 
-      toast.success(response?.data?.message || "Product created successfully!");
-      reset();
-      setImages([]);
-      navigate(`/view-seller-products/${user_id}`);
+      toast.success(response?.data?.message || "Product created successfully!")
+      reset()
+      setImages([])
+      navigate(`/view-seller-products/${user_id}`)
     } catch (error) {
-      const errorMessage =
-        error?.response?.data?.message || "Product creation failed!";
-      toast.error(errorMessage);
-      console.error(error);
+      const errorMessage = error?.response?.data?.message || "Product creation failed!"
+      toast.error(errorMessage)
+      console.error(error)
     }
-  };
+  }
+
+  const generateAIDescription = async () => {
+    try {
+      const payload = {
+        title: watch("title"),
+        brand: watch("brand"),
+        color: watch("color"),
+        specifications: watch("specifications"),
+      }
+
+      const response = await apiInstance.post("/product/generate-description", payload)
+      console.log(response)
+      setValue("description",response.data.short);
+      toast.success("AI description generated!");
+    } catch (error) {
+      console.log("error in call generate ai desc->", error)
+    }
+  }
 
   return (
     <div
@@ -118,41 +135,31 @@ const CreateProduct = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Title */}
           <div className="input-field">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Title
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
             <input
               type="text"
               {...register("title", { required: "Title is required" })}
               className="w-full border px-3 py-2 rounded-md text-sm focus:ring-2 focus:ring-blue-400 outline-none"
               placeholder="Enter product title"
             />
-            {errors.title && (
-              <p className="text-red-500 text-xs mt-1">{errors.title.message}</p>
-            )}
+            {errors.title && <p className="text-red-500 text-xs mt-1">{errors.title.message}</p>}
           </div>
 
           {/* Brand */}
           <div className="input-field">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Brand
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Brand</label>
             <input
               type="text"
               {...register("brand", { required: "Brand is required" })}
               className="w-full border px-3 py-2 rounded-md text-sm focus:ring-2 focus:ring-blue-400 outline-none"
               placeholder="Enter brand name"
             />
-            {errors.brand && (
-              <p className="text-red-500 text-xs mt-1">{errors.brand.message}</p>
-            )}
+            {errors.brand && <p className="text-red-500 text-xs mt-1">{errors.brand.message}</p>}
           </div>
 
           {/* Description */}
-          <div className="md:col-span-2 input-field">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Description
-            </label>
+          <div className="md:col-span-2 input-field relative">
+            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
             <textarea
               {...register("description", { required: "Description is required" })}
               rows={3}
@@ -160,17 +167,19 @@ const CreateProduct = () => {
               placeholder="Product description"
             />
             {errors.description && (
-              <p className="text-red-500 text-xs mt-1">
-                {errors.description.message}
-              </p>
+              <p className="text-red-500 text-xs mt-1">{errors.description.message}</p>
             )}
+            <button
+              onClick={generateAIDescription}
+              className=" absolute right-2 top-15 bg-gradient-to-r from-indigo-500 via-purple-500 to-blue-500 text-white p-1 rounded-md font-semibold transition transform hover:-translate-y-1 hover:shadow-lg hover:shadow-indigo-300/50 duration-300 cursor-pointer"
+            >
+              Generate with AI
+            </button>
           </div>
 
           {/* Price */}
           <div className="input-field">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              MRP
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">MRP</label>
             <input
               type="number"
               {...register("MRP", { required: "MRP is required" })}
@@ -180,9 +189,7 @@ const CreateProduct = () => {
           </div>
 
           <div className="input-field">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Selling Price
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Selling Price</label>
             <input
               type="number"
               {...register("amount", { required: "Amount is required" })}
@@ -192,9 +199,7 @@ const CreateProduct = () => {
           </div>
 
           <div className="input-field">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Currency
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Currency</label>
             <select
               {...register("currency", { required: true })}
               className="w-full border px-3 py-2 rounded-md text-sm focus:ring-2 focus:ring-blue-400 outline-none"
@@ -206,9 +211,7 @@ const CreateProduct = () => {
 
           {/* Color */}
           <div className="input-field">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Color
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Color</label>
             <input
               type="text"
               {...register("color", { required: "Color is required" })}
@@ -219,9 +222,7 @@ const CreateProduct = () => {
 
           {/* Size */}
           <div className="input-field">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Size
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Size</label>
             <input
               type="text"
               {...register("size")}
@@ -232,9 +233,7 @@ const CreateProduct = () => {
 
           {/* Offer & Warranty */}
           <div className="input-field">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Special Offer
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Special Offer</label>
             <input
               type="text"
               {...register("specialOffer")}
@@ -244,9 +243,7 @@ const CreateProduct = () => {
           </div>
 
           <div className="input-field">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Warranty
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Warranty</label>
             <input
               type="text"
               {...register("warrenty", { required: "Warranty is required" })}
@@ -257,9 +254,7 @@ const CreateProduct = () => {
 
           {/* Specifications */}
           <div className="md:col-span-2 input-field">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Specifications
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Specifications</label>
             <textarea
               {...register("specifications", {
                 required: "Specifications are required",
@@ -269,17 +264,13 @@ const CreateProduct = () => {
               placeholder="Enter key specifications"
             />
             {errors.specifications && (
-              <p className="text-red-500 text-xs mt-1">
-                {errors.specifications.message}
-              </p>
+              <p className="text-red-500 text-xs mt-1">{errors.specifications.message}</p>
             )}
           </div>
 
           {/* Images */}
           <div className="md:col-span-2 input-field">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Product Images
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Product Images</label>
             <input
               type="file"
               accept="image/*"
@@ -300,7 +291,7 @@ const CreateProduct = () => {
         </button>
       </form>
     </div>
-  );
-};
+  )
+}
 
-export default CreateProduct;
+export default CreateProduct

@@ -18,6 +18,9 @@ createRoot(document.getElementById("root")).render(
           <ToastContainer
             position="top-right"
             style={{ top: "60px" }}
+            autoClose={2000}
+            hideProgressBar={false}
+            newestOnTop={false}
           />
         </DataContext>
       </QueryClientProvider>
