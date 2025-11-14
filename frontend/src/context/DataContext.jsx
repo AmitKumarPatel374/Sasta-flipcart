@@ -11,6 +11,7 @@ const DataContext = (props) => {
   const [role, setRole] = useState(null);
   const [contact, setContact] = useState('');
   const [user_id, setUser_id] = useState(null);
+  const [categories,setCategories]=useState([]);
 
   // useEffect(() => {
   //   const fetchUsers = async () => {
@@ -52,18 +53,26 @@ const DataContext = (props) => {
         setUser_id(null);
       }
     }
+
+    const getCategories=async()=>{
+      try {
+        const response= await apiInstance.get("/category/get");
+        // console.log(response.data.categories);
+        setCategories(response.data.categories);
+      } catch (error) {
+        console.log(error);
+      }
+    }
     checkAuth();
+    getCategories();
   },[])
 
+  console.log(categories);
+  
 
 
-
-  // useEffect(() => {
-  //   localStorage.setItem("token", token || "");
-  //   localStorage.setItem("role", role || "");
-  // }, [token, role]);
   return (
-    <usercontext.Provider value={{ toggle, setToggle, token, setToken, role, setRole,user_id,setUser_id,contact, setContact }}>
+    <usercontext.Provider value={{ toggle, setToggle, token, setToken, role, setRole,user_id,setUser_id,contact, setContact,categories,setCategories }}>
       {props.children}
     </usercontext.Provider>
   )

@@ -8,6 +8,7 @@ const authRoutes = require("./src/routes/auth.routes");
 const productRoutes = require("./src/routes/product.routes");
 const adminRoutes = require("./src/routes/admin.routes");
 const paymentRoutes = require("./src/routes/payment.routes");
+const categoryRoutes = require("./src/routes/category.routes");
 const connectDB = require("./src/config/database/db");
 const cacheInstance = require("./src/services/cache.service");
 
@@ -89,6 +90,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/product", productRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/payment", paymentRoutes);
+app.use("/api/category", categoryRoutes);
 
 
 let port = process.env.PORT || 5000;
