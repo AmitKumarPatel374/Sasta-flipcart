@@ -1,73 +1,89 @@
-import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import apiInstance from '../config/apiInstance';
+import React, { useState, useEffect, useContext } from "react"
+import { useParams, useNavigate } from "react-router-dom"
+import { toast } from "react-toastify"
+import apiInstance from "../config/apiInstance"
+import { usercontext } from "../context/DataContext"
 
 const UpdateProduct = () => {
-  const { product_id } = useParams();
-  const navigate = useNavigate();
+  const { product_id } = useParams()
+  const navigate = useNavigate()
 
-  const [product, setProduct] = useState({});
-  const [images, setImages] = useState([]);
-  const [newFiles, setNewFiles] = useState([]);
-  const [newImageURL, setNewImageURL] = useState("");
+  const [product, setProduct] = useState({})
+  const [images, setImages] = useState([])
+  const [newFiles, setNewFiles] = useState([])
+  const [newImageURL, setNewImageURL] = useState("")
+  const [selectedCategory, setSelectedCategory] = useState("")
+  const [selectedSub, setSelectedSub] = useState("")
+  const { user_id, categories } = useContext(usercontext)
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const { data } = await apiInstance.get(`/product/product-detail/${product_id}`);
-        setProduct(data.product);
-        setImages(data.product.images || []);
-      } catch (error) {
-        toast.error("Failed to load product details");
+        const { data } = await apiInstance.get(`/product/product-detail/${product_id}`)
+        setProduct(data.product)
+        setImages(data.product.images || [])
+
+        // 👉 Set category if product has it
+      if (data.product.category) {
+        setSelectedCategory(data.product.category)
       }
-    };
-    fetchProduct();
-  }, [product_id]);
+
+      // 👉 Set subCategory
+      if (data.product.subCategory) {
+        setSelectedSub(data.product.subCategory)
+      }} catch (error) {
+        toast.error("Failed to load product details")
+      }
+    }
+    fetchProduct()
+  }, [product_id])
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target
     if (name.includes("price")) {
-      const key = name.split(".")[1];
+      const key = name.split(".")[1]
       setProduct((prev) => ({
         ...prev,
         price: { ...prev.price, [key]: value },
-      }));
+      }))
     } else {
-      setProduct((prev) => ({ ...prev, [name]: value }));
+      setProduct((prev) => ({ ...prev, [name]: value }))
     }
-  };
+  }
 
   const handleFileChange = (e) => {
-    const files = Array.from(e.target.files);
-    setNewFiles((prev) => [...prev, ...files]);
-  };
+    const files = Array.from(e.target.files)
+    setNewFiles((prev) => [...prev, ...files])
+  }
 
   const handleAddImageURL = () => {
     if (newImageURL.trim() !== "") {
-      setImages((prev) => [...prev, newImageURL.trim()]);
-      setNewImageURL("");
-      toast.success("Image added via URL");
+      setImages((prev) => [...prev, newImageURL.trim()])
+      setNewImageURL("")
+      toast.success("Image added via URL")
     }
-  };
+  }
 
   const handleDeleteImage = (url) => {
-    setImages((prev) => prev.filter((img) => img !== url));
-  };
+    setImages((prev) => prev.filter((img) => img !== url))
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
     try {
-      const formData = new FormData();
+      const formData = new FormData()
 
-      formData.append("title", product.title);
-      formData.append("brand", product.brand);
-      formData.append("description", product.description);
-      formData.append("color", product.color);
-      formData.append("size", product.size);
-      formData.append("warrenty", product.warrenty);
-      formData.append("specialOffer", product.specialOffer);
-      formData.append("specifications", product.specifications);
+      formData.append("title", product.title)
+      formData.append("brand", product.brand)
+      formData.append("description", product.description)
+      formData.append("category", product.category)
+      formData.append("subCategory", product.subCategory)
+      formData.append("childCategory", product.childCategory)
+      formData.append("color", product.color)
+      formData.append("size", product.size)
+      formData.append("warrenty", product.warrenty)
+      formData.append("specialOffer", product.specialOffer)
+      formData.append("specifications", product.specifications)
 
       formData.append(
         "price",
@@ -76,33 +92,41 @@ const UpdateProduct = () => {
           amount: Number(product.price?.amount),
           currency: product.price?.currency || "INR",
         })
-      );
+      )
 
-      newFiles.forEach((file) => formData.append("images", file));
-      formData.append("existingImages", JSON.stringify(images));
+      newFiles.forEach((file) => formData.append("images", file))
+      formData.append("existingImages", JSON.stringify(images))
 
-      const response = await apiInstance.put(
-        `/product/update-product/${product_id}`,
-        formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
+      const response = await apiInstance.put(`/product/update-product/${product_id}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      })
 
-      toast.success(response.data.message || "Product updated successfully");
-      navigate(`/detail/${product_id}`);
+      toast.success(response.data.message || "Product updated successfully")
+      navigate(`/detail/${product_id}`)
     } catch (error) {
-      toast.error(error.response?.data?.message || "Update failed");
+      toast.error(error.response?.data?.message || "Update failed")
     }
-  };
+  }
 
   const handleDeleteProduct = async () => {
     try {
-      await apiInstance.delete(`/admin/delete-product/${product_id}`);
-      toast.success("Product deleted successfully");
-      navigate("/view-all-product");
+      await apiInstance.delete(`/admin/delete-product/${product_id}`)
+      toast.success("Product deleted successfully")
+      navigate("/view-all-product")
     } catch (error) {
-      toast.error("Failed to delete product");
+      toast.error("Failed to delete product")
     }
-  };
+  }
+
+  // get subcategoriess
+  const subCategories = selectedCategory
+    ? categories.find((cat) => cat.name === selectedCategory)?.sub || []
+    : []
+
+  // get childCategories
+  const childCategories = selectedSub
+    ? subCategories.find((cat) => cat.title === selectedSub)?.items || []
+    : []
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 py-10 px-4 sm:px-6 lg:px-10 flex justify-center">
@@ -111,7 +135,10 @@ const UpdateProduct = () => {
           🛍️ Update Product
         </h2>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-5"
+        >
           {/* Title */}
           <div>
             <label className="block font-medium mb-1">Title</label>
@@ -150,6 +177,89 @@ const UpdateProduct = () => {
               required
             ></textarea>
           </div>
+
+          {/* category */}
+          <select
+            name="category"
+            value={product.category || selectedCategory}
+            className="w-full border px-3 py-2 rounded-md"
+            onChange={(e) => {
+              setSelectedCategory(e.target.value)
+              setSelectedSub("") // reset sub
+              setProduct({ ...product, category: e.target.value })
+            }}
+          >
+            <option
+              value=""
+              disabled
+              hidden
+            >
+              Select Category
+            </option>
+            {categories.map((cat, idx) => (
+              <option
+                key={idx}
+                value={cat.name}
+              >
+                {cat.name}
+              </option>
+            ))}
+          </select>
+
+          {/* subCategories */}
+          <select
+            name="subCategory"
+            value={product.subCategory || selectedSub}
+            className="w-full border px-3 py-2 rounded-md"
+            disabled={!selectedCategory}
+            onChange={(e) => {
+              setSelectedSub(e.target.value)
+              setProduct({ ...product, subCategory: e.target.value })
+            }}
+          >
+            <option
+              value=""
+              disabled
+              hidden
+            >
+              Select Subcategory
+            </option>
+
+            {subCategories.map((sub, idx) => (
+              <option
+                key={idx}
+                value={sub.title}
+              >
+                {sub.title}
+              </option>
+            ))}
+          </select>
+
+          {/* child category */}
+          <select
+            name="childCategory"
+            value={product.childCategory || product.item || ""}
+            className="w-full border px-3 py-2 rounded-md"
+            disabled={!selectedSub}
+            onChange={(e) => setProduct({ ...product, childCategory: e.target.value })}
+          >
+            <option
+              value=""
+              disabled
+              hidden
+            >
+              Select Child Category
+            </option>
+
+            {childCategories.map((item, idx) => (
+              <option
+                key={idx}
+                value={item}
+              >
+                {item}
+              </option>
+            ))}
+          </select>
 
           {/* Price Section */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -255,7 +365,10 @@ const UpdateProduct = () => {
             {/* Existing Images */}
             <div className="flex flex-wrap gap-3 mb-3 justify-center sm:justify-start">
               {images.map((url, index) => (
-                <div key={index} className="relative">
+                <div
+                  key={index}
+                  className="relative"
+                >
                   <img
                     src={url}
                     alt={`Product ${index}`}
@@ -318,7 +431,7 @@ const UpdateProduct = () => {
         </form>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default UpdateProduct;
+export default UpdateProduct

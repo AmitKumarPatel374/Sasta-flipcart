@@ -20,7 +20,9 @@ const ViewProductDetail = () => {
 
   const fetchProductDetail = async () => {
     try {
-      const response = await apiInstance.get(`/product/product-detail/${product_id}`)
+      const response = await apiInstance.get(`/product/product-detail/${product_id}`);
+      console.log(response);
+      
       setProduct(response.data.product)
       setMainImage(response.data.product.images?.[0] || "")
       setLoading(false)
@@ -117,6 +119,7 @@ const ViewProductDetail = () => {
     title,
     brand,
     description,
+    item,
     color,
     size,
     warrenty,
@@ -209,6 +212,9 @@ const ViewProductDetail = () => {
               <h1 className="text-3xl font-bold text-gray-800 mb-2">{title}</h1>
               <p className="text-gray-500 text-sm">
                 Brand: <span className="font-semibold text-gray-700">{brand}</span>
+              </p>
+              <p className="text-gray-500 text-sm">
+                Item: <span className="font-semibold text-gray-700">{item}</span>
               </p>
             </div>
 

@@ -21,11 +21,10 @@ const CreateProduct = () => {
 
   const [selectedCategory, setSelectedCategory] = useState("")
   const [selectedSub, setSelectedSub] = useState("")
-  const navigate = useNavigate()
   const { user_id, categories } = useContext(usercontext)
+  const navigate = useNavigate()
   const [images, setImages] = useState([])
   const formRef = useRef(null)
-
 
   // ✅ GSAP animations
   useEffect(() => {
@@ -123,20 +122,15 @@ const CreateProduct = () => {
     }
   }
 
-
   // get subcategoriess
-  const subCategories =
-    selectedCategory
-      ? categories.find((cat) => cat.name === selectedCategory)?.sub || []
-      : [];
+  const subCategories = selectedCategory
+    ? categories.find((cat) => cat.name === selectedCategory)?.sub || []
+    : []
 
   // get childCategories
-  const childCategories =
-    selectedSub
-      ? subCategories.find((cat) => cat.title === selectedSub)?.items || []
-      : [];
-
-  
+  const childCategories = selectedSub
+    ? subCategories.find((cat) => cat.title === selectedSub)?.items || []
+    : []
 
   return (
     <div
@@ -204,20 +198,23 @@ const CreateProduct = () => {
             <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
 
             <select
-          {...register("category", { required: "Category is required" })}
-          className="w-full border px-3 py-2 rounded-md text-sm focus:ring-2 focus:ring-blue-400 outline-none"
-          onChange={(e) => {
-            setSelectedCategory(e.target.value);
-            setSelectedSub("");
-          }}
-        >
-          <option value="">Select Category</option>
-          {categories.map((cat, idx) => (
-            <option key={idx} value={cat.name}>
-              {cat.name}
-            </option>
-          ))}
-        </select>
+              {...register("category", { required: "Category is required" })}
+              className="w-full border px-3 py-2 rounded-md text-sm focus:ring-2 focus:ring-blue-400 outline-none"
+              onChange={(e) => {
+                setSelectedCategory(e.target.value)
+                setSelectedSub("")
+              }}
+            >
+              <option value="">Select Category</option>
+              {categories.map((cat, idx) => (
+                <option
+                  key={idx}
+                  value={cat.name}
+                >
+                  {cat.name}
+                </option>
+              ))}
+            </select>
             {errors.category && (
               <p className="text-red-500 text-xs mt-1">{errors.category.message}</p>
             )}
@@ -228,20 +225,23 @@ const CreateProduct = () => {
             <label className="block text-sm font-medium text-gray-700 mb-1">Sub Category</label>
 
             <select
-          {...register("subCategory", { required: "subCategory is required" })}
-          className="w-full border px-3 py-2 rounded-md text-sm focus:ring-2 focus:ring-blue-400 outline-none"
-          onChange={(e) => {
-            setSelectedSub(e.target.value);
-          }}
-          disabled={!selectedCategory}
-        >
-          <option value="">Select subCategory</option>
-          {subCategories.map((cat, idx) => (
-            <option key={idx} value={cat.name}>
-              {cat.title}
-            </option>
-          ))}
-        </select>
+              {...register("subCategory", { required: "subCategory is required" })}
+              className="w-full border px-3 py-2 rounded-md text-sm focus:ring-2 focus:ring-blue-400 outline-none"
+              onChange={(e) => {
+                setSelectedSub(e.target.value)
+              }}
+              disabled={!selectedCategory}
+            >
+              <option value="">Select subCategory</option>
+              {subCategories.map((cat, idx) => (
+                <option
+                  key={idx}
+                  value={cat.name}
+                >
+                  {cat.title}
+                </option>
+              ))}
+            </select>
             {errors.subCategory && (
               <p className="text-red-500 text-xs mt-1">{errors.subCategory.message}</p>
             )}
@@ -252,17 +252,20 @@ const CreateProduct = () => {
             <label className="block text-sm font-medium text-gray-700 mb-1">Child Category</label>
 
             <select
-          {...register("childCategory", { required: "childCategory is required" })}
-          className="w-full border px-3 py-2 rounded-md text-sm focus:ring-2 focus:ring-blue-400 outline-none"
-          disabled={!selectedSub}
-        >
-          <option value="">Select childCategory</option>
-          {childCategories.map((cat, idx) => (
-            <option key={idx} value={cat}>
-              {cat}
-            </option>
-          ))}
-        </select>
+              {...register("childCategory", { required: "childCategory is required" })}
+              className="w-full border px-3 py-2 rounded-md text-sm focus:ring-2 focus:ring-blue-400 outline-none"
+              disabled={!selectedSub}
+            >
+              <option value="">Select childCategory</option>
+              {childCategories.map((cat, idx) => (
+                <option
+                  key={idx}
+                  value={cat}
+                >
+                  {cat}
+                </option>
+              ))}
+            </select>
             {errors.childCategory && (
               <p className="text-red-500 text-xs mt-1">{errors.childCategory.message}</p>
             )}
@@ -278,7 +281,7 @@ const CreateProduct = () => {
               placeholder="Enter MRP"
             />
           </div>
-          
+
           {/* amount */}
           <div className="input-field">
             <label className="block text-sm font-medium text-gray-700 mb-1">Selling Price</label>
@@ -290,8 +293,7 @@ const CreateProduct = () => {
             />
           </div>
 
-           
-           {/* currency */}
+          {/* currency */}
           <div className="input-field">
             <label className="block text-sm font-medium text-gray-700 mb-1">Currency</label>
             <select
@@ -336,7 +338,7 @@ const CreateProduct = () => {
             />
           </div>
 
-           {/* warrenty */}
+          {/* warrenty */}
           <div className="input-field">
             <label className="block text-sm font-medium text-gray-700 mb-1">Warranty</label>
             <input
