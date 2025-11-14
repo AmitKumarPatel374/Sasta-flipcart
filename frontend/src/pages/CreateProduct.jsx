@@ -19,10 +19,13 @@ const CreateProduct = () => {
     formState: { errors, isSubmitting },
   } = useForm()
 
+  const [selectedCategory, setSelectedCategory] = useState("")
+  const [selectedSub, setSelectedSub] = useState("")
   const navigate = useNavigate()
-  const { user_id } = useContext(usercontext)
+  const { user_id, categories } = useContext(usercontext)
   const [images, setImages] = useState([])
   const formRef = useRef(null)
+
 
   // ✅ GSAP animations
   useEffect(() => {
@@ -69,6 +72,9 @@ const CreateProduct = () => {
       formData.append("title", data.title)
       formData.append("brand", data.brand)
       formData.append("description", data.description)
+      formData.append("category", data.category)
+      formData.append("subCategory", data.subCategory)
+      formData.append("childCategory", data.childCategory)
       formData.append("color", data.color)
       formData.append("size", data.size)
       formData.append("specialOffer", data.specialOffer)
@@ -98,6 +104,7 @@ const CreateProduct = () => {
     }
   }
 
+  // description generate by ai
   const generateAIDescription = async () => {
     try {
       const payload = {
@@ -109,12 +116,27 @@ const CreateProduct = () => {
 
       const response = await apiInstance.post("/product/generate-description", payload)
       console.log(response)
-      setValue("description",response.data.short);
-      toast.success("AI description generated!");
+      setValue("description", response.data.short)
+      toast.success("AI description generated!")
     } catch (error) {
       console.log("error in call generate ai desc->", error)
     }
   }
+
+
+  // get subcategoriess
+  const subCategories =
+    selectedCategory
+      ? categories.find((cat) => cat.name === selectedCategory)?.sub || []
+      : [];
+
+  // get childCategories
+  const childCategories =
+    selectedSub
+      ? subCategories.find((cat) => cat.title === selectedSub)?.items || []
+      : [];
+
+  
 
   return (
     <div
@@ -177,7 +199,76 @@ const CreateProduct = () => {
             </button>
           </div>
 
-          {/* Price */}
+          {/* category */}
+          <div className="input-field">
+            <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+
+            <select
+          {...register("category", { required: "Category is required" })}
+          className="w-full border px-3 py-2 rounded-md text-sm focus:ring-2 focus:ring-blue-400 outline-none"
+          onChange={(e) => {
+            setSelectedCategory(e.target.value);
+            setSelectedSub("");
+          }}
+        >
+          <option value="">Select Category</option>
+          {categories.map((cat, idx) => (
+            <option key={idx} value={cat.name}>
+              {cat.name}
+            </option>
+          ))}
+        </select>
+            {errors.category && (
+              <p className="text-red-500 text-xs mt-1">{errors.category.message}</p>
+            )}
+          </div>
+
+          {/*sub category */}
+          <div className="input-field">
+            <label className="block text-sm font-medium text-gray-700 mb-1">Sub Category</label>
+
+            <select
+          {...register("subCategory", { required: "subCategory is required" })}
+          className="w-full border px-3 py-2 rounded-md text-sm focus:ring-2 focus:ring-blue-400 outline-none"
+          onChange={(e) => {
+            setSelectedSub(e.target.value);
+          }}
+          disabled={!selectedCategory}
+        >
+          <option value="">Select subCategory</option>
+          {subCategories.map((cat, idx) => (
+            <option key={idx} value={cat.name}>
+              {cat.title}
+            </option>
+          ))}
+        </select>
+            {errors.subCategory && (
+              <p className="text-red-500 text-xs mt-1">{errors.subCategory.message}</p>
+            )}
+          </div>
+
+          {/*child category */}
+          <div className="input-field">
+            <label className="block text-sm font-medium text-gray-700 mb-1">Child Category</label>
+
+            <select
+          {...register("childCategory", { required: "childCategory is required" })}
+          className="w-full border px-3 py-2 rounded-md text-sm focus:ring-2 focus:ring-blue-400 outline-none"
+          disabled={!selectedSub}
+        >
+          <option value="">Select childCategory</option>
+          {childCategories.map((cat, idx) => (
+            <option key={idx} value={cat}>
+              {cat}
+            </option>
+          ))}
+        </select>
+            {errors.childCategory && (
+              <p className="text-red-500 text-xs mt-1">{errors.childCategory.message}</p>
+            )}
+          </div>
+
+          {/* MRP */}
           <div className="input-field">
             <label className="block text-sm font-medium text-gray-700 mb-1">MRP</label>
             <input
@@ -187,7 +278,8 @@ const CreateProduct = () => {
               placeholder="Enter MRP"
             />
           </div>
-
+          
+          {/* amount */}
           <div className="input-field">
             <label className="block text-sm font-medium text-gray-700 mb-1">Selling Price</label>
             <input
@@ -198,6 +290,8 @@ const CreateProduct = () => {
             />
           </div>
 
+           
+           {/* currency */}
           <div className="input-field">
             <label className="block text-sm font-medium text-gray-700 mb-1">Currency</label>
             <select
@@ -231,7 +325,7 @@ const CreateProduct = () => {
             />
           </div>
 
-          {/* Offer & Warranty */}
+          {/* Offer */}
           <div className="input-field">
             <label className="block text-sm font-medium text-gray-700 mb-1">Special Offer</label>
             <input
@@ -242,6 +336,7 @@ const CreateProduct = () => {
             />
           </div>
 
+           {/* warrenty */}
           <div className="input-field">
             <label className="block text-sm font-medium text-gray-700 mb-1">Warranty</label>
             <input

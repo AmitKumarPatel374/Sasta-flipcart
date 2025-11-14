@@ -33,7 +33,7 @@ const getAllProductController = async (req, res) => {
 
 const createProductController = async (req, res) => {
   try {
-    let { title, brand, description, color, price, size, specialOffer, warrenty, specifications } =
+    let { title, brand, description,category,subCategory,childCategory, color, price, size, specialOffer, warrenty, specifications } =
       req.body
 
     if (price) {
@@ -60,6 +60,9 @@ const createProductController = async (req, res) => {
       !title ||
       !description ||
       !brand ||
+      !category ||
+      !subCategory ||
+      !childCategory ||
       !color ||
       !specialOffer ||
       !warrenty ||
@@ -77,6 +80,9 @@ const createProductController = async (req, res) => {
       title,
       brand,
       description,
+      category,
+      subCategory,
+      item:childCategory,
       price,
       color,
       size,
@@ -105,7 +111,7 @@ const updateProductController = async (req, res) => {
   try {
     let product_id = req.params.product_id
 
-    let { title, brand, description, color, size, specialOffer, warrenty, specifications, price } =
+    let { title, brand, description,category,subCategory,childCategory, color, size, specialOffer, warrenty, specifications, price } =
       req.body
 
     if (price) {
@@ -143,6 +149,9 @@ const updateProductController = async (req, res) => {
         title,
         brand,
         description,
+        category,
+        subCategory,
+        item:childCategory,
         price,
         color,
         size,
