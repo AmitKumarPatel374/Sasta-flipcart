@@ -31,6 +31,37 @@ const getAllProductController = async (req, res) => {
   }
 }
 
+const getProductByCategoryController = async (req, res) => {
+  try {
+    const cat = req.params.category;
+    let products = await productModel.find({category:cat})
+
+    if (!products) {
+      return res.status(400).json({
+        message: "something went wrong",
+      })
+    }
+
+    if (products.length == 0) {
+      return res.status(200).json({
+        message: "no product found",
+      })
+    }
+
+    return res.status(200).json({
+      message: "products fetched",
+      products: products,
+    })
+  } catch (error) {
+    console.log(error)
+    return res.status(500).json({
+      message: "Internal server error!",
+    })
+  }
+}
+
+
+
 const createProductController = async (req, res) => {
   try {
     let { title, brand, description,category,subCategory,childCategory, color, price, size, specialOffer, warrenty, specifications } =
@@ -283,5 +314,6 @@ module.exports = {
   updateProductController,
   deleteProductController,
   productDetailController,
-  generateAiDescription
+  generateAiDescription,
+  getProductByCategoryController
 }

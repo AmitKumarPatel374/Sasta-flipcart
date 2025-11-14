@@ -8,6 +8,7 @@ import UserRoutes from "./routes/UserRoutes";
 import LoginForm from "./pages/LoginForm";
 import RegistrationForm from "./pages/RegistrationForm";
 import NavbarFilter from "./components/NavbarFilter";
+import HomeProductSquareCard from "./layouts/HomeProductSquareCard";
 
 const App = () => {
   const [toggle, setToggle] = useState(true);
