@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom"
 
 const HomeProductSquareCard = ({ category }) => {
   const [products, setProducts] = useState([])
-  const navigate=useNavigate();
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,7 +30,10 @@ const HomeProductSquareCard = ({ category }) => {
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-xl font-semibold">{`${category} Top Deals`}</h1>
 
-        <button onClick={()=>navigate(`/${category}`)} className="bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 transition">
+        <button
+          onClick={() => navigate(`/${category}`)}
+          className="bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 transition"
+        >
           <ArrowRight size={18} />
         </button>
       </div>
@@ -47,7 +50,7 @@ const HomeProductSquareCard = ({ category }) => {
       >
         {products.slice(0, 4).map((product, index) => (
           <div
-            onClick={()=>navigate(`/${category}/${product.item}`)}
+            onClick={() => navigate(`/${category}/${product.item}`)}
             key={index}
             className="
               border border-gray-300 rounded-xl p-4 bg-white 

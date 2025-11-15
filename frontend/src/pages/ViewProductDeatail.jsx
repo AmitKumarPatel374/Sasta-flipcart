@@ -171,6 +171,36 @@ const ViewProductDetail = () => {
   return (
     <div>
       <NavbarFilter />
+
+       <div className="flex justify-between text-gray-400 items-center mt-4 ml-2">
+        <h3 className=" font-semibold">
+          <span
+            className="cursor-pointer"
+            onClick={() => navigate(`/view-all-product`)}
+          >
+            {"Product->"}
+          </span>
+          <span
+            className="cursor-pointer"
+           onClick={() => navigate(`/${product.category}`)}
+          >
+            {`${product.category}->`}
+          </span>
+          <span
+            className="cursor-pointer"
+           onClick={() => navigate(`/${product.category}/${product.item}`)}
+          >
+            {`${product.item}->`}
+          </span>
+          <span
+            className="cursor-pointer"
+          >
+            detail
+          </span>
+
+        </h3>
+      </div>
+      
       <div
         ref={productRef}
         className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-100 py-10 px-4 sm:px-6"

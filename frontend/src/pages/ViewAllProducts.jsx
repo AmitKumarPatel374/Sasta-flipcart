@@ -22,15 +22,15 @@ const ViewAllProducts = () => {
         <div className="flex flex-wrap  mt-5 justify-between">
           <HomeProductSquareCard category={"Fashion"} />
           <HomeProductSquareCard category={"Electronics"} />
-          <HomeProductSquareCard category={"Electronics"} />
+          <HomeFullImageCard category={"Beauty & Food"}/>
         </div>
         <div className=" mt-5">
           <HomeProductRectangleCard category={"Fashion"} />
         </div>
         <div className="flex flex-wrap  mt-5 justify-between">
+          <HomeFullImageCard category={"Beauty & Food"}/>
           <HomeProductSquareCard category={"Home & Furniture"} />
           <HomeProductSquareCard category={"Beauty & Food"} />
-          <HomeFullImageCard category={"Beauty & Food"}/>
         </div>
       </div>
     </div>

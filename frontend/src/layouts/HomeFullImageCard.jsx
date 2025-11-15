@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { productByCateGory } from "../Service/ProductFilterByCategoryService";
+import { useNavigate } from "react-router-dom";
 
 const HomeFullImageCard = ({ category }) => {
   const [randomProduct, setRandomProduct] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -20,6 +22,7 @@ const HomeFullImageCard = ({ category }) => {
 
   return (
     <div
+      onClick={()=>navigate(`/${category}/${randomProduct.item}`)}
       className="
         p-4 mt-5 rounded-lg shadow-sm bg-gray-300 
         w-full 

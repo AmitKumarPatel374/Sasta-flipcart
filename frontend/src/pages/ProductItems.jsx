@@ -65,7 +65,29 @@ const ProductItems = () => {
   }
   return (
     <div className="px-4 sm:px-6 lg:px-12 py-8 sm:py-12 bg-gradient-to-br from-gray-50 via-white to-gray-100 min-h-screen">
-      <h1>hi</h1>
+      <div className="flex justify-between text-gray-400 items-center mb-4">
+        <h3 className=" font-semibold">
+          <span
+            className="cursor-pointer"
+            onClick={() => navigate(`/view-all-product`)}
+          >
+            {"Product->"}
+          </span>
+          <span
+            className="cursor-pointer"
+           onClick={() => navigate(`/${category}`)}
+          >
+            {`${category}->`}
+          </span>
+          <span
+            className="cursor-pointer"
+           onClick={() => navigate(`/${category}/${item}`)}
+          >
+            {item}
+          </span>
+
+        </h3>
+      </div>
       {/* Products Grid */}
       {items && items.length > 0 ? (
         <div className="grid gap-6 sm:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

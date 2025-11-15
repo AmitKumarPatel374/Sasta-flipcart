@@ -1,24 +1,41 @@
-import React, { useEffect, useState } from "react";
-import { productByCateGory } from "../Service/ProductFilterByCategoryService";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react"
+import { productByCateGory } from "../Service/ProductFilterByCategoryService"
+import { useNavigate, useParams } from "react-router-dom"
 
 const CategoryBasedTopProduct = () => {
-  const { category } = useParams();
+  const { category } = useParams()
+  const navigate = useNavigate()
 
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState([])
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await productByCateGory(category);
-      setProducts(response || []);
-      console.log(response);
-    };
-    fetchData();
-  }, [category]);
+      const response = await productByCateGory(category)
+      setProducts(response || [])
+      console.log(response)
+    }
+    fetchData()
+  }, [category])
 
   return (
     <div className="flex flex-col p-5">
       {/* ----- Header ----- */}
+      <div className="flex justify-between text-gray-400 items-center mb-1">
+        <h3 className=" font-semibold">
+          <span
+            className="cursor-pointer"
+            onClick={() => navigate(`/view-all-product`)}
+          >
+            {"Product->"}
+          </span>
+          <span
+            className="cursor-pointer"
+           onClick={() => navigate(`/${category}`)}
+          >
+            {category}
+          </span>
+        </h3>
+      </div>
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-xl font-semibold">{`${category} Top Deals`}</h1>
       </div>
@@ -37,12 +54,12 @@ const CategoryBasedTopProduct = () => {
       >
         {products.map((product, index) => {
           const discount =
-            ((product?.price?.MRP - product?.price?.amount) * 100) /
-            product?.price?.MRP;
+            ((product?.price?.MRP - product?.price?.amount) * 100) / product?.price?.MRP
 
           return (
             discount >= 30 && (
               <div
+                onClick={() => navigate(`/${category}/${product.item}`)}
                 key={index}
                 className="
                   border border-gray-300 rounded-xl p-4 bg-white 
@@ -65,11 +82,11 @@ const CategoryBasedTopProduct = () => {
                 </p>
               </div>
             )
-          );
+          )
         })}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default CategoryBasedTopProduct;
+export default CategoryBasedTopProduct

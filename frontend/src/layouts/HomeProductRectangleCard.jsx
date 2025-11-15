@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
 import Slider from "react-slick"
 import { productByCateGory } from "../Service/ProductFilterByCategoryService"
+import { useNavigate } from "react-router-dom"
 
 // =============================
 // ARROW STYLING (INLINE CSS)
@@ -29,6 +30,7 @@ const arrowStyles = `
 
 const HomeProductRectangleCard = ({ category }) => {
   const [products, setProducts] = useState([])
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -95,12 +97,15 @@ const HomeProductRectangleCard = ({ category }) => {
       <style>{arrowStyles}</style>
 
       <Slider {...sliderSettings}>
-        {products.map((product, i) => (
+        {products.slice(0, 10).map((product, i) => (
           <div
             key={i}
             className="p-2"
           >
-            <div className="bg-white rounded-xl shadow-md p-3 flex flex-col items-center justify-center h-full">
+            <div
+              onClick={() => navigate(`/${category}/${product.item}`)}
+              className="bg-white rounded-xl shadow-md p-3 flex flex-col items-center justify-center h-full"
+            >
               <img
                 src={product.images[0]}
                 alt=""
