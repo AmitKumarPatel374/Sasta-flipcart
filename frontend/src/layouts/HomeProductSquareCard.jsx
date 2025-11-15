@@ -47,6 +47,7 @@ const HomeProductSquareCard = ({ category }) => {
       >
         {products.slice(0, 4).map((product, index) => (
           <div
+            onClick={()=>navigate(`/${category}/${product.item}`)}
             key={index}
             className="
               border border-gray-300 rounded-xl p-4 bg-white 
