@@ -1,17 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { productByCateGory } from "../Service/ProductFilterByCategoryService";
-import { ArrowRight } from "lucide-react";
+import React, { useEffect, useState } from "react"
+import { productByCateGory } from "../Service/ProductFilterByCategoryService"
+import { ArrowRight } from "lucide-react"
+import { useNavigate } from "react-router-dom"
 
-const HomeProductSquareCard = ({category}) => {
-  const [products, setProducts] = useState([]);
+const HomeProductSquareCard = ({ category }) => {
+  const [products, setProducts] = useState([])
+  const navigate=useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await productByCateGory(category);
-      setProducts(response || []);
-    };
-    fetchData();
-  }, []);
+      const response = await productByCateGory(category)
+      setProducts(response || [])
+    }
+    fetchData()
+  }, [])
 
   return (
     <div
@@ -28,7 +30,7 @@ const HomeProductSquareCard = ({category}) => {
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-xl font-semibold">{`${category} Top Deals`}</h1>
 
-        <button className="bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 transition">
+        <button onClick={()=>navigate(`/${category}`)} className="bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 transition">
           <ArrowRight size={18} />
         </button>
       </div>
@@ -58,18 +60,14 @@ const HomeProductSquareCard = ({category}) => {
               className="w-full h-40 object-contain"
             />
 
-            <h1 className="text-sm font-semibold mt-2 text-center line-clamp-2">
-              {product.title}
-            </h1>
+            <h1 className="text-sm font-semibold mt-2 text-center line-clamp-2">{product.title}</h1>
 
-            <p className="text-green-600 text-sm mt-1 font-medium">
-              Min. 70% Off
-            </p>
+            <p className="text-green-600 text-sm mt-1 font-medium">Min. 30% Off</p>
           </div>
         ))}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default HomeProductSquareCard;
+export default HomeProductSquareCard

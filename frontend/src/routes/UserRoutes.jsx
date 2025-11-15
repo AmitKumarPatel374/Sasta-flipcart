@@ -15,6 +15,7 @@ import UpdateProduct from '../pages/UpdateProduct'
 import GetUser from '../pages/GetUser'
 import ViewAdminProducts from '../pages/ViewAdminProducts'
 import VerifyContact from '../pages/VerifyContact'
+import CategoryBasedTopProduct from '../pages/CategoryBasedTopProduct'
 
 const UserRutes = () => {
     return (
@@ -35,6 +36,8 @@ const UserRutes = () => {
             <Route path='/update-product/:product_id' element={<UpdateProduct />} />
             <Route path='/detail/:product_id' element={<ViewProductDeatail />} />
             <Route path='/view-seller-products/:user_id' element={<ViewAdminProducts />} />
+            <Route path='/:category' element={<CategoryBasedTopProduct />} />
+
             <Route path="*" element={<PageNotFound />} />
         </Routes>
     )
