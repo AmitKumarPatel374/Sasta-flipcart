@@ -3,19 +3,18 @@ import ItemPageComponent from "../components/ItemPageComponent"
 import apiInstance from "../config/apiInstance"
 import React, { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
-import { toast } from "react-toastify"
 
-const ProductItems = () => {
+const FilterByItems = () => {
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const { category,subCategory, item } = useParams()
+  const { category, subCategory, item } = useParams()
   const navigate = useNavigate()
 
   useEffect(() => {
     const fetchItems = async () => {
       try {
-        const response = await apiInstance.get(`/product/${category}/${subCategory}/${item}`)
+        const response = await apiInstance.get(`/product/filter/${category}/${subCategory}/${item}`)
         setItems(response.data.items)
       } catch (err) {
         setError(err.message)
@@ -41,10 +40,9 @@ const ProductItems = () => {
         </div>
       </div>
     )
-
   return (
     <div>
-      <NavbarFilter />
+        <NavbarFilter />
       <div className="flex justify-between text-gray-400 items-center mt-5 ml-5">
         <h3 className=" font-semibold">
           <span
@@ -73,4 +71,4 @@ const ProductItems = () => {
   )
 }
 
-export default ProductItems
+export default FilterByItems

@@ -17,6 +17,7 @@ import ViewAdminProducts from '../pages/ViewAdminProducts'
 import VerifyContact from '../pages/VerifyContact'
 import CategoryBasedTopProduct from '../pages/CategoryBasedTopProduct'
 import ProductItems from '../pages/ProductItems'
+import FilterByItems from '../pages/FilterByItems'
 
 const UserRutes = () => {
     return (
@@ -38,7 +39,8 @@ const UserRutes = () => {
             <Route path='/detail/:product_id' element={<ViewProductDeatail />} />
             <Route path='/view-seller-products/:user_id' element={<ViewAdminProducts />} />
             <Route path='/:category' element={<CategoryBasedTopProduct />} />
-            <Route path='/:category/:item' element={<ProductItems />} />
+            <Route path='/:category/:subCategory/:item' element={<ProductItems />} />
+            <Route path='/filter/:category/:subCategory/:item' element={<FilterByItems />} />
 
             <Route path="*" element={<PageNotFound />} />
         </Routes>

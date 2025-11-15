@@ -22,7 +22,7 @@ const HomeFullImageCard = ({ category }) => {
 
   return (
     <div
-      onClick={()=>navigate(`/${category}/${randomProduct.item}`)}
+      onClick={()=>navigate(`/${category}/${randomProduct.subCategory}/${randomProduct.item}`)}
       className="
         p-4 mt-5 rounded-lg shadow-sm bg-gray-300 
         w-full 

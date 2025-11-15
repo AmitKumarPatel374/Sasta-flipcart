@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom"
 import { usercontext } from "../context/DataContext"
 import React, { useState, useRef, useEffect, useContext } from "react"
 
@@ -5,6 +6,7 @@ const NavbarFilter = () => {
   const [openIndex, setOpenIndex] = useState(null)
   const [mobileMenu, setMobileMenu] = useState(null)
   const dropdownRef = useRef(null)
+  const navigate = useNavigate();
 
   const isMobile = window.innerWidth < 1024
 
@@ -58,6 +60,8 @@ const NavbarFilter = () => {
                       <ul className="space-y-1">
                         {sub.items.map((item, j) => (
                           <li
+                            // onClick={()=>console.log(cat.name,sub.title,item)}
+                            onClick={()=>navigate(`/filter/${cat.name}/${sub.title}/${item}`)}
                             key={j}
                             className="text-gray-600 text-sm hover:text-blue-500"
                           >

@@ -20,11 +20,11 @@ const ViewProductDetail = () => {
 
   const fetchProductDetail = async () => {
     try {
-      console.log(product_id);
-      
-      const response = await apiInstance.get(`/product/product-detail/${product_id}`);
-      console.log(response);
-      
+      console.log(product_id)
+
+      const response = await apiInstance.get(`/product/product-detail/${product_id}`)
+      console.log(response)
+
       setProduct(response.data.product)
       // setMainImage(response.data.product.images?.[0] || "")
       setLoading(false)
@@ -172,7 +172,7 @@ const ViewProductDetail = () => {
     <div>
       <NavbarFilter />
 
-       <div className="flex justify-between text-gray-400 items-center mt-4 ml-2">
+      <div className="flex justify-between text-gray-400 items-center mt-4 ml-2">
         <h3 className=" font-semibold">
           <span
             className="cursor-pointer"
@@ -182,25 +182,20 @@ const ViewProductDetail = () => {
           </span>
           <span
             className="cursor-pointer"
-           onClick={() => navigate(`/${product.category}`)}
+            onClick={() => navigate(`/${product.category}`)}
           >
             {`${product.category}->`}
           </span>
           <span
             className="cursor-pointer"
-           onClick={() => navigate(`/${product.category}/${product.item}`)}
+            onClick={() => navigate(`/${product.category}/${product.subCategory}/${product.item}`)}
           >
             {`${product.item}->`}
           </span>
-          <span
-            className="cursor-pointer"
-          >
-            detail
-          </span>
-
+          <span className="cursor-pointer">detail</span>
         </h3>
       </div>
-      
+
       <div
         ref={productRef}
         className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-100 py-10 px-4 sm:px-6"
