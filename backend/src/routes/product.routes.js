@@ -1,5 +1,5 @@
 const express = require("express");
-const { createProductController, getAllProductController, updateProductController, deleteProductController, productDetailController, generateAiDescription, getProductByCategoryController, getProductByItemCategoryController } = require("../controllers/product.controllers");
+const { createProductController, getAllProductController, updateProductController, deleteProductController, productDetailController, generateAiDescription, getProductByCategoryController, getProductByItemCategoryController, searchProductController } = require("../controllers/product.controllers");
 const uploads = require("../config/database/multer");
 const authMiddleware = require("../middlewares/auth.middleware");
 const adminMiddleware = require("../middlewares/admin.middleware");
@@ -10,6 +10,7 @@ router.post("/create-product",adminMiddleware, uploads.array("images", 5), creat
 
 router.get("/get-products",authMiddleware, getAllProductController);
 router.get("/product-detail/:product_id", authMiddleware, productDetailController);
+router.get("/search",searchProductController);
 router.get("/:category",getProductByCategoryController);
 router.get("/:category/:subCategory/:item",getProductByItemCategoryController);
 router.get("/filter/:category/:subCategory/:item",getProductByItemCategoryController);

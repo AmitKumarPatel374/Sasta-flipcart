@@ -1,28 +1,30 @@
-import NavbarFilter from "../components/NavbarFilter"
 import ItemPageComponent from "../components/ItemPageComponent"
+import NavbarFilter from "../components/NavbarFilter"
 import apiInstance from "../config/apiInstance"
 import React, { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 
-const FilterByItems = () => {
+const SearchItem = () => {
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const { category, subCategory, item } = useParams()
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
+  const {searchValue}=useParams();
 
   useEffect(() => {
-    const fetchItems = async () => {
+    const searchProducts = async () => {
       try {
-        const response = await apiInstance.get(`/product/filter/${category}/${subCategory}/${item}`)
-        setItems(response.data.items)
+        const response = await apiInstance.get(`/product/search?q=${searchValue}`)
+        setItems(response.data.products)
       } catch (err) {
         setError(err.message)
       } finally {
         setLoading(false)
       }
-    } 
-    fetchItems()
+    }
+
+    searchProducts()
   }, [])
 
   if (loading)
@@ -40,9 +42,10 @@ const FilterByItems = () => {
         </div>
       </div>
     )
+
   return (
     <div>
-        <NavbarFilter />
+      <NavbarFilter />
       <div className="flex justify-between text-gray-400 items-center mt-5 ml-5">
         <h3 className=" font-semibold">
           <span
@@ -51,18 +54,7 @@ const FilterByItems = () => {
           >
             {"Product->"}
           </span>
-          <span
-            className="cursor-pointer"
-            onClick={() => navigate(`/${category}`)}
-          >
-            {`${category}->`}
-          </span>
-          <span
-            className="cursor-pointer"
-            onClick={() => navigate(`/${category}/${subCategory}/${item}`)}
-          >
-            {item}
-          </span>
+          <span>{"search"}</span>
         </h3>
       </div>
 
@@ -71,4 +63,4 @@ const FilterByItems = () => {
   )
 }
 
-export default FilterByItems
+export default SearchItem

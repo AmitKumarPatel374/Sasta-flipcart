@@ -18,6 +18,7 @@ import VerifyContact from '../pages/VerifyContact'
 import CategoryBasedTopProduct from '../pages/CategoryBasedTopProduct'
 import ProductItems from '../pages/ProductItems'
 import FilterByItems from '../pages/FilterByItems'
+import SearchItem from '../pages/SearchItem'
 
 const UserRutes = () => {
     return (
@@ -41,6 +42,7 @@ const UserRutes = () => {
             <Route path='/:category' element={<CategoryBasedTopProduct />} />
             <Route path='/:category/:subCategory/:item' element={<ProductItems />} />
             <Route path='/filter/:category/:subCategory/:item' element={<FilterByItems />} />
+            <Route path='/search/:searchValue' element={<SearchItem />} />
 
             <Route path="*" element={<PageNotFound />} />
         </Routes>

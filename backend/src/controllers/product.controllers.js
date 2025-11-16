@@ -33,8 +33,8 @@ const getAllProductController = async (req, res) => {
 
 const getProductByCategoryController = async (req, res) => {
   try {
-    const cat = req.params.category;
-    let products = await productModel.find({category:cat})
+    const cat = req.params.category
+    let products = await productModel.find({ category: cat })
 
     if (!products) {
       return res.status(400).json({
@@ -62,8 +62,8 @@ const getProductByCategoryController = async (req, res) => {
 
 const getProductByItemCategoryController = async (req, res) => {
   try {
-    const item = req.params.item;
-    let products = await productModel.find({item:item})
+    const item = req.params.item
+    let products = await productModel.find({ item: item })
 
     if (!products) {
       return res.status(400).json({
@@ -89,12 +89,77 @@ const getProductByItemCategoryController = async (req, res) => {
   }
 }
 
+const searchProductController = async (req, res) => {
+  try {
+    const { q } = req.query
 
+    const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+    if (!q || q.trim() === "") {
+      return res.status(400).json({ message: "Search query required" })
+    }
+
+    const query = q.trim()
+    const tokens = query.split(/\s+/) // multiple words → multi-token search
+
+    let andConditions = []
+
+    tokens.forEach((word) => {
+      const escaped = escapeRegex(word)
+      const regex = new RegExp(escaped, "i")
+
+      // if the token is a number → consider it price too
+      const isNumber = !isNaN(word)
+
+      let orConditions = [
+        { title: regex },
+        { brand: regex },
+        { description: regex },
+        { category: regex },
+        { subCategory: regex },
+        { item: regex },
+        { specifications: regex },
+        { color: regex },
+        { size: regex },
+        { "price.currency": regex },
+      ]
+
+      if (isNumber) {
+        orConditions.push({ "price.amount": Number(word) }, { "price.MRP": Number(word) })
+      }
+
+      andConditions.push({ $or: orConditions })
+    })
+
+    const products = await productModel.find({ $and: andConditions })
+
+    res.status(200).json({
+      success: true,
+      count: products.length,
+      products,
+    })
+  } catch (error) {
+    console.log("Search API Error:", error)
+    res.status(500).json({ message: "Internal Server Error" })
+  }
+}
 
 const createProductController = async (req, res) => {
   try {
-    let { title, brand, description,category,subCategory,childCategory, color, price, size, specialOffer, warrenty, specifications } =
-      req.body
+    let {
+      title,
+      brand,
+      description,
+      category,
+      subCategory,
+      childCategory,
+      color,
+      price,
+      size,
+      specialOffer,
+      warrenty,
+      specifications,
+    } = req.body
 
     if (price) {
       try {
@@ -142,7 +207,7 @@ const createProductController = async (req, res) => {
       description,
       category,
       subCategory,
-      item:childCategory,
+      item: childCategory,
       price,
       color,
       size,
@@ -171,8 +236,20 @@ const updateProductController = async (req, res) => {
   try {
     let product_id = req.params.product_id
 
-    let { title, brand, description,category,subCategory,childCategory, color, size, specialOffer, warrenty, specifications, price } =
-      req.body
+    let {
+      title,
+      brand,
+      description,
+      category,
+      subCategory,
+      childCategory,
+      color,
+      size,
+      specialOffer,
+      warrenty,
+      specifications,
+      price,
+    } = req.body
 
     if (price) {
       try {
@@ -211,7 +288,7 @@ const updateProductController = async (req, res) => {
         description,
         category,
         subCategory,
-        item:childCategory,
+        item: childCategory,
         price,
         color,
         size,
@@ -277,8 +354,7 @@ const productDetailController = async (req, res) => {
     }
 
     const product = await productModel.findById(product_id)
-    console.log(product);
-    
+    console.log(product)
 
     if (!product) {
       return res.status(404).json({
@@ -311,29 +387,26 @@ const generateAiDescription = async (req, res) => {
                      Give output in 2 parts:
                     1. Short Description (2–3 lines)
                     2. Detailed Description (5–8 lines)
-                     `;
+                     `
 
+    const response = await groq.chat.completions.create({
+      model: "llama-3.3-70b-versatile",
+      messages: [{ role: "user", content: prompt }],
+    })
 
-                    const response = await groq.chat.completions.create({
-                        model:"llama-3.3-70b-versatile",
-                        messages: [{ role: "user", content: prompt }]
-                    });
+    const text = response.choices[0].message.content
+    const shortDesc = text.split("**Part 2")[0].replace("**Part 1: Short Description**", "").trim()
+    const detailDesc = text.split(" **Part 2: Detailed Description**")[1]
 
-                    const text=response.choices[0].message.content;
-                    const shortDesc=text.split("**Part 2")[0].replace("**Part 1: Short Description**","").trim();
-                    const detailDesc=text.split(" **Part 2: Detailed Description**")[1];
-
-                    return res.status(200).json({
-                        success:true,
-                        short:shortDesc,
-                        detail:detailDesc
-                    })
-                    
-
+    return res.status(200).json({
+      success: true,
+      short: shortDesc,
+      detail: detailDesc,
+    })
   } catch (error) {
-    console.log("error in des generation->",error);
+    console.log("error in des generation->", error)
     return res.status(500).json({
-        message:"internal server error!"
+      message: "internal server error!",
     })
   }
 }
@@ -346,5 +419,6 @@ module.exports = {
   productDetailController,
   generateAiDescription,
   getProductByCategoryController,
-  getProductByItemCategoryController
+  getProductByItemCategoryController,
+  searchProductController
 }
