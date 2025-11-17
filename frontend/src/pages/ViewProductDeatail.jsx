@@ -23,7 +23,6 @@ const ViewProductDetail = () => {
       console.log(product_id)
 
       const response = await apiInstance.get(`/product/product-detail/${product_id}`)
-      console.log(response)
 
       setProduct(response.data.product)
       // setMainImage(response.data.product.images?.[0] || "")
@@ -32,6 +31,15 @@ const ViewProductDetail = () => {
       console.error("Error fetching product:", error)
       setLoading(false)
     }
+  }
+
+  console.log(product);
+  
+
+  const addToCartHandler = async () => {
+    const response = await apiInstance.post("/product/addCart",{
+      productId: product_id
+    });
   }
 
   useEffect(() => {
@@ -283,7 +291,10 @@ const ViewProductDetail = () => {
 
             {/* 🛒 Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 mt-6">
-              <button className="action-btn flex-1 px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl shadow-md hover:bg-blue-700 hover:shadow-lg transform hover:-translate-y-0.5 transition">
+              <button
+                onClick={addToCartHandler}
+                className="action-btn flex-1 px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl shadow-md hover:bg-blue-700 hover:shadow-lg transform hover:-translate-y-0.5 transition"
+              >
                 🛒 Add to Cart
               </button>
               <button

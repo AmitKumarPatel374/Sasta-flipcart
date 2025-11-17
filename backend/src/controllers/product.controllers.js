@@ -1,5 +1,6 @@
 const productModel = require("../model/product.model")
 const ProductModel = require("../model/product.model")
+const UserModel = require("../model/user.model")
 const groq = require("../services/groqAI.service")
 const sendFilesToStorage = require("../services/storage.service")
 
@@ -93,7 +94,7 @@ const searchProductController = async (req, res) => {
   try {
     const { q } = req.query
 
-    const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
 
     if (!q || q.trim() === "") {
       return res.status(400).json({ message: "Search query required" })
@@ -411,6 +412,59 @@ const generateAiDescription = async (req, res) => {
   }
 }
 
+const addCartHandler = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const productId = req.body;
+
+    
+
+    const user = await UserModel.findById(userId);
+    console.log(user);
+    
+    if (!user) return res.status(404).json({ message: "User not found" })
+
+    const item = user.cart.find((p) => p.productId.toString() === productId)
+
+    if (item) {
+      item.quantity += 1;
+      console.log("quantity badhi");
+      
+    } else {
+      item.cart.push({ productId, quantity: 1 })
+    }
+
+    // await user.save()
+
+    // res.status(500).json({
+    //   message: "product added in cart",
+    //   cart: user.cart,
+    // })
+  } catch (error) {
+    console.log("error in des add to cart->", error)
+    return res.status(500).json({
+      message: "internal server error!",
+    })
+  }
+}
+
+const fetchProductFromCart = async (req, res) => {
+  try {
+    const userId = req.userId
+
+    const user = await UserModel.findById(userId).populate("cart.productId")
+
+    res.status(200).json({
+      cart: user.cart,
+    })
+  } catch (error) {
+    console.log("error in fetching products from cart->", error)
+    return res.status(500).json({
+      message: "internal server error!",
+    })
+  }
+}
+
 module.exports = {
   createProductController,
   getAllProductController,
@@ -420,5 +474,7 @@ module.exports = {
   generateAiDescription,
   getProductByCategoryController,
   getProductByItemCategoryController,
-  searchProductController
+  searchProductController,
+  addCartHandler,
+  fetchProductFromCart
 }
