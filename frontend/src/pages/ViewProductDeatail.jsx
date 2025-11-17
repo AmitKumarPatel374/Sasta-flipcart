@@ -40,6 +40,8 @@ const ViewProductDetail = () => {
     const response = await apiInstance.post("/product/addCart",{
       productId: product_id
     });
+
+    toast.success(response.data.message);
   }
 
   useEffect(() => {

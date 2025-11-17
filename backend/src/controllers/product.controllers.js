@@ -414,32 +414,35 @@ const generateAiDescription = async (req, res) => {
 
 const addCartHandler = async (req, res) => {
   try {
-    const userId = req.user._id;
-    const productId = req.body;
+    const userId = req.user._id
+    const { productId } = req.body
 
-    
+    const user = await UserModel.findById(userId)
+    // console.log(user)
 
-    const user = await UserModel.findById(userId);
-    console.log(user);
-    
     if (!user) return res.status(404).json({ message: "User not found" })
 
-    const item = user.cart.find((p) => p.productId.toString() === productId)
+    // Ensure cart exists
+    user.cart = user.cart || []
+
+    // Check item exists in cart
+    let item = user.cart.find((p) => p.productId.toString() === productId)
+
+    
 
     if (item) {
-      item.quantity += 1;
-      console.log("quantity badhi");
-      
+      item.quantity += 1
     } else {
-      item.cart.push({ productId, quantity: 1 })
+      user.cart.push({ productId, quantity: 1 })
     }
 
-    // await user.save()
 
-    // res.status(500).json({
-    //   message: "product added in cart",
-    //   cart: user.cart,
-    // })
+    await user.save()
+
+    res.status(200).json({
+      message: "product added in cart",
+      cart: user.cart,
+    })
   } catch (error) {
     console.log("error in des add to cart->", error)
     return res.status(500).json({
@@ -450,9 +453,11 @@ const addCartHandler = async (req, res) => {
 
 const fetchProductFromCart = async (req, res) => {
   try {
-    const userId = req.userId
+    const userId = req.user._id;
+    
 
-    const user = await UserModel.findById(userId).populate("cart.productId")
+    const user = await UserModel.findById(userId).populate("cart.productId");
+    
 
     res.status(200).json({
       cart: user.cart,
@@ -476,5 +481,5 @@ module.exports = {
   getProductByItemCategoryController,
   searchProductController,
   addCartHandler,
-  fetchProductFromCart
+  fetchProductFromCart,
 }

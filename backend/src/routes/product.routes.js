@@ -11,6 +11,7 @@ router.post("/create-product",adminMiddleware, uploads.array("images", 5), creat
 router.get("/get-products",authMiddleware, getAllProductController);
 router.get("/product-detail/:product_id", authMiddleware, productDetailController);
 router.get("/search",searchProductController);
+router.get("/cart",authMiddleware, fetchProductFromCart);
 router.get("/:category",getProductByCategoryController);
 router.get("/:category/:subCategory/:item",getProductByItemCategoryController);
 router.get("/filter/:category/:subCategory/:item",getProductByItemCategoryController);
@@ -20,6 +21,5 @@ router.put("/update-product/:product_id",authMiddleware, uploads.array("images",
 router.delete("/delete-product/:product_id", authMiddleware, deleteProductController);
 router.post("/generate-description",authMiddleware, generateAiDescription);
 router.post("/addCart",authMiddleware, addCartHandler);
-router.post("/cart",authMiddleware, fetchProductFromCart);
 
 module.exports = router;
