@@ -1,3 +1,4 @@
+const {mongoose } = require("mongoose")
 const productModel = require("../model/product.model")
 const ProductModel = require("../model/product.model")
 const UserModel = require("../model/user.model")
@@ -428,14 +429,11 @@ const addCartHandler = async (req, res) => {
     // Check item exists in cart
     let item = user.cart.find((p) => p.productId.toString() === productId)
 
-    
-
     if (item) {
       item.quantity += 1
     } else {
       user.cart.push({ productId, quantity: 1 })
     }
-
 
     await user.save()
 
@@ -453,11 +451,9 @@ const addCartHandler = async (req, res) => {
 
 const fetchProductFromCart = async (req, res) => {
   try {
-    const userId = req.user._id;
-    
+    const userId = req.user._id
 
-    const user = await UserModel.findById(userId).populate("cart.productId");
-    
+    const user = await UserModel.findById(userId).populate("cart.productId")
 
     res.status(200).json({
       cart: user.cart,
@@ -467,6 +463,55 @@ const fetchProductFromCart = async (req, res) => {
     return res.status(500).json({
       message: "internal server error!",
     })
+  }
+}
+
+const updateCartQuantity = async (req, res) => {
+  try {
+    const { productId, change } = req.body
+    const userId = req.user._id
+
+    const user = await UserModel.findById(userId)
+    // console.log(user)
+
+    if (!user) return res.status(404).json({ message: "User not found" })
+
+    // Check item exists in cart
+    let item = user.cart.find((p) => p.productId.toString() === productId)
+
+    if (!item) return res.status(404).json({ message: "Item not found" })
+
+    item.quantity += change
+    if (item.quantity < 1) item.quantity = 1
+
+    await user.save()
+
+    res.json({ message: "Quantity updated", cart: user.cart })
+  } catch (err) {
+    console.log("error in change quantity->", err)
+    res.status(500).json({ message: "Server Error", err })
+  }
+}
+
+const deleteCartItem = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const productId = req.params.id
+
+    await UserModel.findByIdAndUpdate(
+      userId,
+      {
+        $pull: {
+          cart: { productId: new mongoose.Types.ObjectId(productId) },
+        },
+      },
+      { new: true }
+    )
+
+    res.json({ message: "Item removed from cart" })
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Server Error", err })
   }
 }
 
@@ -482,4 +527,6 @@ module.exports = {
   searchProductController,
   addCartHandler,
   fetchProductFromCart,
+  updateCartQuantity,
+  deleteCartItem
 }
