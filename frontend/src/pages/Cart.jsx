@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react"
 import apiInstance from "../config/apiInstance"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { Delete } from "lucide-react"
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -18,12 +19,11 @@ const Cart = () => {
     setCartItems(response.data.cart)
 
     let total = 0
-    response.data.cart.forEach(item => {
+    response.data.cart.forEach((item) => {
       total += item.productId.price.amount * item.quantity
     })
     setTotalAmount(total)
   }
-
 
   const updateQuantity = async (id, change) => {
     await apiInstance.put("/product/cart/update", {
@@ -34,7 +34,7 @@ const Cart = () => {
   }
 
   const deleteItem = async (id) => {
-    console.log(id);
+    console.log(id)
     await apiInstance.delete(`/product/cart/delete/${id}`)
     fetchCart()
   }
@@ -63,14 +63,53 @@ const Cart = () => {
     return () => ctx.revert()
   }, [])
 
+  const paymentHandler = async () => {
+    let details = {
+      amount: totalAmount,
+      currency: cartItems[0]?.productId?.price?.currency || "INR",
+    }
+
+    const res = await apiInstance.post("/payment/process", details)
+    if (res) {
+      const options = {
+        key: import.meta.env.VITE_RAZORPAY_API_KEY,
+        amount: res.data.orders.amount,
+        currency: res.data.orders.currency,
+        name: "ShopMaster",
+        description: "test transaction",
+        order_id: res.data.orders.id,
+        handler: async function (response) {
+          const verifyRes = await apiInstance.post("/payment/verify", {
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_signature: response.razorpay_signature,
+            product_id: product._id,
+          })
+          toast.success(verifyRes.data.message)
+        },
+        prefill: {
+          name: "Amit Kumar Patel",
+          email: "amit@example.com",
+          contact: "9999999999",
+        },
+        theme: { color: "blue" },
+      }
+
+      const razorpayScreen = new window.Razorpay(options)
+      razorpayScreen.open()
+    }
+  }
+
   return (
-    <div ref={pageRef} className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-100 p-6">
+    <div
+      ref={pageRef}
+      className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-100 p-6"
+    >
       <h1 className="text-4xl font-bold mb-10 text-center">
         🛒 <span className="text-blue-600">Your Cart</span>
       </h1>
 
       <div className="space-y-6 max-w-4xl mx-auto">
-
         {/* CART ITEMS */}
         {cartItems.map((item) => (
           <div
@@ -116,19 +155,25 @@ const Cart = () => {
             {/* DELETE BUTTON */}
             <button
               onClick={() => deleteItem(item.productId._id)}
-              className="text-red-500 font-semibold hover:text-red-700"
+              className="text-red-500 font-semibold hover:text-red-700 cursor-pointer"
             >
-              ❌
+              <Delete />
             </button>
           </div>
         ))}
       </div>
 
       {/* TOTAL */}
-      <div className="total-box max-w-4xl mx-auto mt-10 p-6 bg-white border rounded-2xl shadow-xl">
+      <div className="total-box max-w-4xl mx-auto mt-10 p-6 bg-white border rounded-2xl shadow-xl flex justify-between">
         <h2 className="text-2xl font-bold text-gray-800">
           Total Amount: <span className="text-green-600">₹{totalAmount}</span>
         </h2>
+        <button
+          onClick={paymentHandler}
+          className="bg-green-500 p-2 rounded-xl cursor-pointer hover:bg-green-400"
+        >
+          ⚡ Buy Now
+        </button>
       </div>
     </div>
   )

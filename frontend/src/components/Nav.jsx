@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect, useRef } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { usercontext } from "../context/DataContext";
-import { Menu, X, Search } from "lucide-react";
+import { Menu, X, Search, ShoppingCart } from "lucide-react";
 import gsap from "gsap";
 
 const Nav = () => {
@@ -85,7 +85,7 @@ const Nav = () => {
               <NavLink to="/" className={linkClass}>Home</NavLink>
               <NavLink to="/view-all-product" className={linkClass}>Products</NavLink>
               <NavLink to="/about" className={linkClass}>About</NavLink>
-              <NavLink to="/product/cart" className={linkClass}>Cart</NavLink>
+              <NavLink to="/product/cart" className={linkClass}> <ShoppingCart /></NavLink>
               <NavLink to="/user-profile" className={linkClass}>Profile</NavLink>
             </>
           ) : (
@@ -156,7 +156,7 @@ const Nav = () => {
                 <NavLink to="/" onClick={toggleMenu} className={linkClass}>Home</NavLink>
                 <NavLink to="/view-all-product" onClick={toggleMenu} className={linkClass}>Products</NavLink>
                 <NavLink to="/about" onClick={toggleMenu} className={linkClass}>About</NavLink>
-                <NavLink to="/product/cart" onClick={toggleMenu} className={linkClass}>Cart</NavLink>
+                <NavLink to="/product/cart" onClick={toggleMenu} className={linkClass}> <ShoppingCart /></NavLink>
                 <NavLink to="/user-profile" onClick={toggleMenu} className={linkClass}>Profile</NavLink>
               </>
             ) : (
