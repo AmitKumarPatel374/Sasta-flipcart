@@ -10,7 +10,7 @@ const sendFilesToStorage = async (file, fileName) => {
   return await storageInstance.upload({
     file,
     fileName,
-    folder: "sasta-flipkart",
+    folder: "ShopMaster",
   });
 };
 

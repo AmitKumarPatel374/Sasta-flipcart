@@ -25,7 +25,7 @@ const ViewProductDetail = () => {
       const response = await apiInstance.get(`/product/product-detail/${product_id}`)
 
       setProduct(response.data.product)
-      // setMainImage(response.data.product.images?.[0] || "")
+      setMainImage(response.data.product.images?.[0] || "")
       setLoading(false)
     } catch (error) {
       console.error("Error fetching product:", error)

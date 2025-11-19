@@ -64,6 +64,7 @@ const ViewAdminProducts = () => {
         <div className="grid gap-6 sm:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {products.map((product) => (
             <div
+              onClick={() => navigate(`/detail/${product._id}`)}
               key={product._id || product.id}
               className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300 flex flex-col justify-between border border-gray-200"
             >
@@ -135,22 +136,6 @@ const ViewAdminProducts = () => {
                   </p>
                 )}
 
-                <div className="mt-4 flex flex-col sm:flex-row justify-center gap-3">
-                  <button
-                    onClick={() => navigate(`/detail/${product._id}`)}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition w-full sm:w-auto"
-                  >
-                    👁️ View Details
-                  </button>
-                  {role === "seller" && (
-                    <button
-                      onClick={() => deleteHandler(product._id)}
-                      className="px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-500 transition w-full sm:w-auto"
-                    >
-                      🗑️ Delete Product
-                    </button>
-                  )}
-                </div>
               </div>
             </div>
           ))}
