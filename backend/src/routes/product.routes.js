@@ -1,5 +1,5 @@
 const express = require("express");
-const { createProductController, getAllProductController, updateProductController, deleteProductController, productDetailController, generateAiDescription, getProductByCategoryController, getProductByItemCategoryController, searchProductController, addCartHandler, fetchProductFromCart, updateCartQuantity, deleteCartItem } = require("../controllers/product.controllers");
+const { createProductController, getAllProductController, updateProductController, deleteProductController, productDetailController, generateAiDescription, getProductByCategoryController, getProductByItemCategoryController, searchProductController, addCartHandler, fetchProductFromCart, updateCartQuantity, deleteCartItem, shopMasterChat } = require("../controllers/product.controllers");
 const uploads = require("../config/database/multer");
 const authMiddleware = require("../middlewares/auth.middleware");
 const adminMiddleware = require("../middlewares/admin.middleware");
@@ -8,6 +8,7 @@ const router = express.Router();
 
 router.post("/create-product",adminMiddleware, uploads.array("images", 5), createProductController);
 
+router.post("/ask", shopMasterChat);
 router.get("/get-products",authMiddleware, getAllProductController);
 router.get("/product-detail/:product_id", authMiddleware, productDetailController);
 router.get("/search",searchProductController);
@@ -23,5 +24,6 @@ router.put("/update-product/:product_id",authMiddleware, uploads.array("images",
 router.delete("/delete-product/:product_id", authMiddleware, deleteProductController);
 router.post("/generate-description",authMiddleware, generateAiDescription);
 router.post("/addCart",authMiddleware, addCartHandler);
+
 
 module.exports = router;

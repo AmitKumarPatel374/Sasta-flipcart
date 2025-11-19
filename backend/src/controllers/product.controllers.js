@@ -515,6 +515,101 @@ const deleteCartItem = async (req, res) => {
   }
 }
 
+const shopMasterChat = async (req, res) => {
+  try {
+    const { message } = req.body;
+    if (!message) return res.status(400).json({ success: false, message: "message required" });
+
+    // 1) Use AI to extract filters + intent (JSON output)
+    const extractionPrompt = `
+Extract shopping intent and return JSON only (no extra text).
+
+User message: "${message}"
+
+Return JSON with fields:
+{
+  "category": "Mobiles / Shoes / Makeup / Laptop / Clothing / null",
+  "maxPrice": number or null,
+  "minPrice": number or null,
+  "color": string or null,
+  "brand": string or null,
+  "type": "product-query" | "login-help" | "general-query" | "other"
+}
+
+If user asks "how to login" or "forgot password" -> type = "login-help".
+If user asks about orders, returns, delivery, payment -> type = "general-query".
+If it's clearly product search or recommendation -> type = "product-query".
+If uncertain -> type = "other".
+    `;
+
+    const extractionResp = await groq.chat.completions.create({
+      model: "llama-3.3-70b-versatile",
+      messages: [{ role: "user", content: extractionPrompt }]
+    });
+
+    // parse JSON safely
+    let filters = {};
+    try {
+      const raw = extractionResp.choices[0].message.content.trim();
+      filters = JSON.parse(raw);
+    } catch (e) {
+      // fallback if parsing fails
+      filters = { category: null, maxPrice: null, minPrice: null, color: null, brand: null, type: "other" };
+    }
+
+    // 2) If product-query -> query MongoDB
+    let products = [];
+    if (filters.type === "product-query") {
+      const query = {};
+      if (filters.category) query.category = { $regex: new RegExp(filters.category, "i") };
+      if (filters.brand) query.brand = { $regex: new RegExp(filters.brand, "i") };
+      if (filters.color) query.color = { $regex: new RegExp(filters.color, "i") };
+
+      if (filters.minPrice || filters.maxPrice) {
+        query["price.amount"] = {};
+        if (filters.minPrice) query["price.amount"].$gte = Number(filters.minPrice);
+        if (filters.maxPrice) query["price.amount"].$lte = Number(filters.maxPrice);
+      }
+
+      products = await ProductModel.find(query).limit(15).lean();
+    }
+
+    // 3) Compose final prompt for the AI to answer the user
+    const finalPrompt = `
+You are ShopMaster AI Assistant.
+
+User question:
+"${message}"
+
+Extracted Filters:
+${JSON.stringify(filters, null, 2)}
+
+Product Results (from DB):
+${JSON.stringify(products, null, 2)}
+
+Rules:
+- If type = "login-help": give step-by-step instructions for login/signup/password reset for ShopMaster.
+- If type = "general-query": answer concisely about delivery, return policy, payments, tracking.
+- If type = "product-query": recommend from 'Product Results' only. If empty, say "No products found matching your filters on ShopMaster."
+- If type = "other": ask a clarifying question or handle politely.
+- Use plain, friendly language and keep replies short (max 6 sentences).
+    `;
+
+    const finalResp = await groq.chat.completions.create({
+      model: "llama-3.3-70b-versatile",
+      messages: [{ role: "user", content: finalPrompt }]
+    });
+
+    const reply = finalResp.choices[0].message.content;
+    return res.json({ success: true, reply, products });
+
+  } catch (err) {
+    console.error("AI Chatbot Error:", err);
+    res.status(500).json({ success: false, message: "internal server error" });
+  }
+};
+
+
 module.exports = {
   createProductController,
   getAllProductController,
@@ -528,5 +623,6 @@ module.exports = {
   addCartHandler,
   fetchProductFromCart,
   updateCartQuantity,
-  deleteCartItem
+  deleteCartItem,
+  shopMasterChat
 }
