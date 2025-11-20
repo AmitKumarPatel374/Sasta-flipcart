@@ -19,7 +19,7 @@ const HomeProductSlider = () => {
   const category = "Fashion"
 
   return (
-    <div className="w-full h-[80vh] overflow-hidden relative rounded-xl mt-5 p-5 bg-gray-500">
+    <div className="w-full h-[80vh] overflow-hidden relative rounded-xl mt-5 p-4 bg-gray-500">
       <Slider {...sliderSettings}>
         <img
           onClick={() => navigate(`/${"Fashion"}`)}

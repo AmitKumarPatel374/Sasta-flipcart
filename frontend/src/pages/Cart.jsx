@@ -3,6 +3,7 @@ import apiInstance from "../config/apiInstance"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { Delete } from "lucide-react"
+import { useNavigate } from "react-router-dom"
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -10,6 +11,7 @@ const Cart = () => {
   const [cartItems, setCartItems] = useState([])
   const [totalAmount, setTotalAmount] = useState(0)
   const pageRef = useRef(null)
+  const navigate = useNavigate();
 
   // ----------------------
   // Fetch Cart
@@ -113,6 +115,7 @@ const Cart = () => {
         {/* CART ITEMS */}
         {cartItems.map((item) => (
           <div
+            onClick={() => navigate(`/detail/${item.productId._id}`)}
             key={item.productId._id}
             className="cart-card flex items-center gap-6 p-5 bg-white rounded-2xl shadow-lg border"
           >

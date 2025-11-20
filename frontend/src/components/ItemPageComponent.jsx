@@ -1,6 +1,7 @@
 import { usercontext } from "../context/DataContext"
 import React, { useContext } from "react"
 import { useNavigate } from "react-router-dom"
+import Slider from "react-slick"
 
 const ItemPageComponent = ({items}) => {
   const navigate = useNavigate()

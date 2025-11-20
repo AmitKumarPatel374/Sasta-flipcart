@@ -89,7 +89,7 @@ const HomeProductRectangleCard = ({ category }) => {
   return (
     <div className="w-full h-[40vh] p-4 bg-gray-300 rounded-xl">
       {/* ----- Header ----- */}
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-center mb-1">
         <h1 className="text-xl font-semibold">{`${category} Top Deals`}</h1>
       </div>
 

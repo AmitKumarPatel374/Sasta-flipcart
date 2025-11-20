@@ -33,15 +33,14 @@ const ViewProductDetail = () => {
     }
   }
 
-  console.log(product);
-  
+  console.log(product)
 
   const addToCartHandler = async () => {
-    const response = await apiInstance.post("/product/addCart",{
-      productId: product_id
-    });
+    const response = await apiInstance.post("/product/addCart", {
+      productId: product_id,
+    })
 
-    toast.success(response.data.message);
+    toast.success(response.data.message)
   }
 
   useEffect(() => {
@@ -293,25 +292,39 @@ const ViewProductDetail = () => {
 
             {/* 🛒 Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 mt-6">
-              <button
-                onClick={addToCartHandler}
-                className="action-btn flex-1 px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl shadow-md hover:bg-blue-700 hover:shadow-lg transform hover:-translate-y-0.5 transition"
-              >
-                🛒 Add to Cart
-              </button>
-              <button
-                onClick={paymentHandler}
-                className="action-btn flex-1 px-6 py-3 bg-green-600 text-white font-semibold rounded-xl shadow-md hover:bg-green-700 hover:shadow-lg transform hover:-translate-y-0.5 transition"
-              >
-                ⚡ Buy Now
-              </button>
+              {role === "user" && (
+                <>
+                  <button
+                    onClick={addToCartHandler}
+                    className="action-btn flex-1 px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl shadow-md hover:bg-blue-700 hover:shadow-lg transform hover:-translate-y-0.5 transition"
+                  >
+                    🛒 Add to Cart
+                  </button>
+
+                  <button
+                    onClick={paymentHandler}
+                    className="action-btn flex-1 px-6 py-3 bg-green-600 text-white font-semibold rounded-xl shadow-md hover:bg-green-700 hover:shadow-lg transform hover:-translate-y-0.5 transition"
+                  >
+                    ⚡ Buy Now
+                  </button>
+                </>
+              )}
+
               {role === "seller" && (
-                <button
-                  onClick={() => navigate(`/update-product/${product_id}`)}
-                  className="action-btn flex-1 px-6 py-3 bg-gray-600 text-white font-semibold rounded-xl shadow-md hover:bg-gray-700 hover:shadow-lg transform hover:-translate-y-0.5 transition"
-                >
-                  🔁 Update Product
-                </button>
+                <>
+                  <button
+                    onClick={() => navigate(`/update-product/${product_id}`)}
+                    className="action-btn flex-1 px-6 py-3 bg-gray-600 text-white font-semibold rounded-xl shadow-md hover:bg-gray-700 hover:shadow-lg transform hover:-translate-y-0.5 transition"
+                  >
+                    🔁 Update Product
+                  </button>
+                  <button
+                    onClick={() => deleteHandler(product._id)}
+                    className="px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-500 transition w-full sm:w-auto"
+                  >
+                    🗑️ Delete Product
+                  </button>
+                </>
               )}
             </div>
           </div>
