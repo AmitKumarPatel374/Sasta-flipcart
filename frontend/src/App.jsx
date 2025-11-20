@@ -25,6 +25,7 @@ const App = () => {
         </Routes>
       </AnimatePresence>
 
+
       <Footer />
     </div>
   );
