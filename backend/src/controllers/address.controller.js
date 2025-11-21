@@ -56,7 +56,7 @@ const addAddressController = async (req, res) => {
 
     return res.status(201).json({
       message: "address added successfully!",
-      address:add
+      address: add,
     })
   } catch (error) {
     console.log("error in adding address->", error)
@@ -67,4 +67,27 @@ const addAddressController = async (req, res) => {
   }
 }
 
-module.exports = { pincodeController,addAddressController }
+const getAddressController = async (req, res) => {
+  try {
+    let addresses = await addressModel.find()
+
+    if (!addresses) {
+      return res.status(200).json({
+        message: "no addressses added till now!",
+      })
+    }
+
+    return res.status(200).json({
+      message: "addresses fetched successfully!",
+      addresses: addresses,
+    })
+  } catch (error) {
+    console.log("error in fetching address->", error)
+    return res.status(500).json({
+      message: "Internal server error",
+      error: error,
+    })
+  }
+}
+
+module.exports = { pincodeController, addAddressController,getAddressController }

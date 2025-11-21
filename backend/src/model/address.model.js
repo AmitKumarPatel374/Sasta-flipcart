@@ -36,7 +36,6 @@ const addressSchema = new mongoose.Schema({
   },
 })
 
-// addressSchema.index({ mobile: 1 }, { unique: false })
 
 
 const addressModel = mongoose.model("address",addressSchema);
