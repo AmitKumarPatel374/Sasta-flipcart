@@ -3,6 +3,6 @@ const { pincodeController } = require("../controllers/address.controller");
 
 const router = express.Router();
 
-router.get("/:pin",pincodeController);
+router.get("/pin/:pin",pincodeController);
 
 module.exports=router;

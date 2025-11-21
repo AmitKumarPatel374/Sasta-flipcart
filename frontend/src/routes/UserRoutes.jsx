@@ -20,6 +20,7 @@ import ProductItems from "../pages/ProductItems"
 import FilterByItems from "../pages/FilterByItems"
 import SearchItem from "../pages/SearchItem"
 import Cart from "../pages/Cart"
+import AddressForm from "../pages/AddressForm"
 
 const UserRutes = () => {
   return (
@@ -104,6 +105,10 @@ const UserRutes = () => {
       <Route
         path="/product/cart"
         element={<Cart />}
+      />
+      <Route
+        path="/product/cart/address"
+        element={<AddressForm />}
       />
 
       <Route

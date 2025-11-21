@@ -3,8 +3,6 @@ const axios = require("axios");
 const pincodeController = async (req, res) => {
   try {
     const { pin } = req.params;
-    console.log(pin);
-
     const response = await axios.get(
       `https://api.postalpincode.in/pincode/${pin}`
     );
