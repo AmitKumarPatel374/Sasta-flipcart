@@ -7,9 +7,9 @@ const addressSchema = new mongoose.Schema({
   },
   mobile: {
     type: String,
-    unique: true,
     minlength: 10,
     maxlength: 10,
+    unique:false
   },
   pincode: {
     type: String,
@@ -35,6 +35,9 @@ const addressSchema = new mongoose.Schema({
     ref: "User",
   },
 })
+
+// addressSchema.index({ mobile: 1 }, { unique: false })
+
 
 const addressModel = mongoose.model("address",addressSchema);
 

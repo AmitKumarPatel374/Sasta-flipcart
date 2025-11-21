@@ -37,7 +37,7 @@ const addAddressController = async (req, res) => {
       })
     }
 
-    let add = new addressModel.create({
+    let add = await addressModel.create({
       ownerName,
       mobile,
       pincode,
@@ -56,6 +56,7 @@ const addAddressController = async (req, res) => {
 
     return res.status(201).json({
       message: "address added successfully!",
+      address:add
     })
   } catch (error) {
     console.log("error in adding address->", error)
