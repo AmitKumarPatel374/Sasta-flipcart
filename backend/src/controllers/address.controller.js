@@ -69,7 +69,9 @@ const addAddressController = async (req, res) => {
 
 const getAddressController = async (req, res) => {
   try {
-    let addresses = await addressModel.find()
+    const userId = req.user._id;
+    
+    let addresses = await addressModel.find({userId});
 
     if (!addresses) {
       return res.status(200).json({

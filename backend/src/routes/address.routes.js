@@ -6,6 +6,6 @@ const router = express.Router();
 
 router.get("/pin/:pin",authMiddleware,pincodeController);
 router.post("/add",authMiddleware,addAddressController);
-router.post("/get",authMiddleware,getAddressController);
+router.get("/get",authMiddleware,getAddressController);
 
 module.exports=router;
