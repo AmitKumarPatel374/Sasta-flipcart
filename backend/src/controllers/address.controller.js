@@ -66,4 +66,4 @@ const addAddressController = async (req, res) => {
   }
 }
 
-module.exports = { pincodeController }
+module.exports = { pincodeController,addAddressController }
