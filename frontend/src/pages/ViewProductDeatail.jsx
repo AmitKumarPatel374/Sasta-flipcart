@@ -301,12 +301,6 @@ const ViewProductDetail = () => {
                     🛒 Add to Cart
                   </button>
 
-                  <button
-                    onClick={paymentHandler}
-                    className="action-btn flex-1 px-6 py-3 bg-green-600 text-white font-semibold rounded-xl shadow-md hover:bg-green-700 hover:shadow-lg transform hover:-translate-y-0.5 transition"
-                  >
-                    ⚡ Buy Now
-                  </button>
                 </>
               )}
 

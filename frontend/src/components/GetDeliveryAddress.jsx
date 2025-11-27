@@ -1,26 +1,24 @@
-import apiInstance from "../config/apiInstance";
-import React, { useEffect, useState } from "react";
+import apiInstance from "../config/apiInstance"
+import React, { useEffect, useState } from "react"
 
-const GetDeliveryAddress = () => {
-  const [addresses, setAddresses] = useState([]);
-  const [selectedAddress, setSelectedAddress] = useState(null);
+const GetDeliveryAddress = ({ selectedAddress, setSelectedAddress }) => {
+  const [addresses, setAddresses] = useState([])
 
   const fetchAddress = async () => {
     try {
-      const response = await apiInstance.get("/address/get");
-      setAddresses(response.data.addresses || []);
+      const response = await apiInstance.get("/address/get")
+      setAddresses(response.data.addresses || [])
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
-  };
+  }
 
   useEffect(() => {
-    fetchAddress();
-  }, []);
+    fetchAddress()
+  }, [])
 
   return (
     <div className="p-4">
-
       <h1 className="text-2xl font-bold mb-4">Select Delivery Address</h1>
 
       <div className="space-y-4">
@@ -57,13 +55,22 @@ const GetDeliveryAddress = () => {
 
       {/* Selected Address Output (optional) */}
       {selectedAddress && (
-        <div className="mt-6 p-4 border rounded-xl bg-green-50">
-          <p className="font-semibold">Selected Address ID:</p>
-          <p>{selectedAddress}</p>
+        <div>
+          <div className="mt-6 p-4 border rounded-xl bg-green-50 flex justify-between">
+            <div >
+              <p className="font-semibold">Selected Address ID:</p>
+              <p>{selectedAddress}</p>
+            </div>
+            <div>
+              <button className="bg-green-500 p-2 rounded-xl cursor-pointer hover:bg-green-400">
+                Continue
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default GetDeliveryAddress;
+export default GetDeliveryAddress

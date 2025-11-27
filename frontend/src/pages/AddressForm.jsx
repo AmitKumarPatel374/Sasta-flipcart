@@ -4,6 +4,7 @@ import React, { useState } from "react";
 
 const AddressForm = () => {
   const [isAdd, setIsAdd] = useState(false);
+  const [selectedAddress, setSelectedAddress] = useState(null);
 
   return (
     <div className="min-h-screen bg-gray-100 p-4 md:p-8">
@@ -12,7 +13,7 @@ const AddressForm = () => {
         <h1 className="text-2xl font-bold mb-4 text-gray-800">
           Delivery Addresses
         </h1>
-        <GetDeliveryAddress />
+        <GetDeliveryAddress selectedAddress={selectedAddress} setSelectedAddress={setSelectedAddress} />
       </div>
 
       {/* ADD NEW BUTTON */}

@@ -1,16 +1,17 @@
-import { useEffect, useState, useRef } from "react"
+import { useEffect, useState, useRef, useContext } from "react"
 import apiInstance from "../config/apiInstance"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { Delete } from "lucide-react"
 import { useNavigate } from "react-router-dom"
+import { usercontext } from "../context/DataContext"
 
 gsap.registerPlugin(ScrollTrigger)
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([])
-  const [totalAmount, setTotalAmount] = useState(0)
-  const pageRef = useRef(null)
+  const pageRef = useRef(null);
+  const {totalAmount,setTotalAmount,setCurrency}=useContext(usercontext);
   const navigate = useNavigate();
 
   // ----------------------
@@ -24,7 +25,8 @@ const Cart = () => {
     response.data.cart.forEach((item) => {
       total += item.productId.price.amount * item.quantity
     })
-    setTotalAmount(total)
+    setTotalAmount(total);
+    setCurrency(cartItems[0]?.productId?.price?.currency || "INR");
   }
 
   const updateQuantity = async (id, change) => {

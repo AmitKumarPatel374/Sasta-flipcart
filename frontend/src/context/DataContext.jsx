@@ -12,6 +12,8 @@ const DataContext = (props) => {
   const [contact, setContact] = useState('');
   const [user_id, setUser_id] = useState(null);
   const [categories,setCategories]=useState([]);
+  const [totalAmount,setTotalAmount]=useState(0);
+  const [currency,setCurrency]=useState("");
 
   // useEffect(() => {
   //   const fetchUsers = async () => {
@@ -72,7 +74,7 @@ const DataContext = (props) => {
 
 
   return (
-    <usercontext.Provider value={{ toggle, setToggle, token, setToken, role, setRole,user_id,setUser_id,contact, setContact,categories,setCategories }}>
+    <usercontext.Provider value={{ toggle, setToggle, token, setToken, role, setRole,user_id,setUser_id,contact, setContact,categories,setCategories,totalAmount,setTotalAmount,currency,setCurrency }}>
       {props.children}
     </usercontext.Provider>
   )
