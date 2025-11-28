@@ -85,6 +85,7 @@ const Nav = () => {
               <NavLink to="/" className={linkClass}>Home</NavLink>
               <NavLink to="/view-all-product" className={linkClass}>Products</NavLink>
               <NavLink to="/about" className={linkClass}>About</NavLink>
+              <NavLink to="/product/orders" className={linkClass}>Orders</NavLink>
               <NavLink to="/product/cart" className={linkClass}> <ShoppingCart /></NavLink>
               <NavLink to="/user-profile" className={linkClass}>Profile</NavLink>
             </>
@@ -156,6 +157,7 @@ const Nav = () => {
                 <NavLink to="/" onClick={toggleMenu} className={linkClass}>Home</NavLink>
                 <NavLink to="/view-all-product" onClick={toggleMenu} className={linkClass}>Products</NavLink>
                 <NavLink to="/about" onClick={toggleMenu} className={linkClass}>About</NavLink>
+                <NavLink to="/product/orders" className={linkClass}>Orders</NavLink>
                 <NavLink to="/product/cart" onClick={toggleMenu} className={linkClass}> <ShoppingCart /></NavLink>
                 <NavLink to="/user-profile" onClick={toggleMenu} className={linkClass}>Profile</NavLink>
               </>

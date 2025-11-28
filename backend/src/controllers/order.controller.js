@@ -11,7 +11,7 @@ const createOrder = async (req, res) => {
     if (!user || user.cart.length === 0) {
       return res.status(400).json({ message: "Cart is empty" })
     }
-
+    
     const items = user.cart.map((item) => ({
       productId: item.productId._id,
       quantity: item.quantity,
@@ -62,7 +62,7 @@ const getOrderController = async (req, res) => {
 
     const orders = await orderModel.find({ userId })
 
-    if (!response) {
+    if (!orders) {
       return res.status(400).json({
         message: "something went wrong",
       })
