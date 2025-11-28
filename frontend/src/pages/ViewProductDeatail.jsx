@@ -140,42 +140,6 @@ const ViewProductDetail = () => {
     images,
   } = product
 
-  const paymentHandler = async () => {
-    let details = {
-      amount: price.amount,
-      currency: price.currency,
-    }
-
-    const res = await apiInstance.post("/payment/process", details)
-    if (res) {
-      const options = {
-        key: import.meta.env.VITE_RAZORPAY_API_KEY,
-        amount: res.data.orders.amount,
-        currency: res.data.orders.currency,
-        name: "ShopMaster",
-        description: "test transaction",
-        order_id: res.data.orders.id,
-        handler: async function (response) {
-          const verifyRes = await apiInstance.post("/payment/verify", {
-            razorpay_order_id: response.razorpay_order_id,
-            razorpay_payment_id: response.razorpay_payment_id,
-            razorpay_signature: response.razorpay_signature,
-            product_id: product._id,
-          })
-          toast.success(verifyRes.data.message)
-        },
-        prefill: {
-          name: "Amit Kumar Patel",
-          email: "amit@example.com",
-          contact: "9999999999",
-        },
-        theme: { color: "blue" },
-      }
-
-      const razorpayScreen = new window.Razorpay(options)
-      razorpayScreen.open()
-    }
-  }
 
   return (
     <div>

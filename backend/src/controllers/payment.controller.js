@@ -4,20 +4,21 @@ const productModel = require("../model/product.model");
 const paymentProcessController =async(req,res)=>{
     try {
         const {amount,currency}=req.body;
-
+        
+        
         if (!amount || !currency) {
-            return res.status(404).json({
-                message:"amount or currency are not found!"
-            })
+          return res.status(404).json({
+            message:"amount or currency are not found!"
+          })
         }
-
+        
         const options={
-            amount:amount*100,
-            currency:currency||"INR",
-            receipt:`receipt_${Date.now()}`,
-            payment_capture:1
+          amount:amount*100,
+          currency:currency||"INR",
+          receipt:`receipt_${Date.now()}`,
+          payment_capture:1
         }
-
+        
         const orders = await razorpayInstance.orders.create(options);
         console.log("order created->",orders);
 

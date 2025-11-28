@@ -470,6 +470,7 @@ const updateCartQuantity = async (req, res) => {
   try {
     const { productId, change } = req.body
     const userId = req.user._id
+    
 
     const user = await UserModel.findById(userId)
     // console.log(user)
@@ -495,7 +496,9 @@ const updateCartQuantity = async (req, res) => {
 
 const deleteCartItem = async (req, res) => {
   try {
-    const userId = req.user._id;
+    const userId = req.user._id
+    console.log(req.user);
+    
     const productId = req.params.id
 
     await UserModel.findByIdAndUpdate(

@@ -10,23 +10,27 @@ gsap.registerPlugin(ScrollTrigger)
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([])
-  const pageRef = useRef(null);
-  const {totalAmount,setTotalAmount,setCurrency}=useContext(usercontext);
-  const navigate = useNavigate();
+  const pageRef = useRef(null)
+  const { totalAmount, setTotalAmount, currency, setCurrency } = useContext(usercontext)
+  const navigate = useNavigate()
 
   // ----------------------
   // Fetch Cart
   // ----------------------
   const fetchCart = async () => {
     const response = await apiInstance.get("/product/cart")
+
     setCartItems(response.data.cart)
 
     let total = 0
     response.data.cart.forEach((item) => {
       total += item.productId.price.amount * item.quantity
     })
-    setTotalAmount(total);
-    setCurrency(cartItems[0]?.productId?.price?.currency || "INR");
+    setTotalAmount(total)
+    setCurrency(response.data.cart[0].productId.price.currency)
+
+    localStorage.setItem("amountToPay", total)
+    localStorage.setItem("currencyToPay", response.data.cart[0].productId.price.currency)
   }
 
   const updateQuantity = async (id, change) => {
@@ -39,7 +43,9 @@ const Cart = () => {
 
   const deleteItem = async (id) => {
     console.log(id)
-    await apiInstance.delete(`/product/cart/delete/${id}`)
+    const res =await apiInstance.delete(`/product/cart/delete/${id}`);
+    console.log(res);
+    
     fetchCart()
   }
 
@@ -67,42 +73,7 @@ const Cart = () => {
     return () => ctx.revert()
   }, [])
 
-  const paymentHandler = async () => {
-    let details = {
-      amount: totalAmount,
-      currency: cartItems[0]?.productId?.price?.currency || "INR",
-    }
 
-    const res = await apiInstance.post("/payment/process", details)
-    if (res) {
-      const options = {
-        key: import.meta.env.VITE_RAZORPAY_API_KEY,
-        amount: res.data.orders.amount,
-        currency: res.data.orders.currency,
-        name: "ShopMaster",
-        description: "test transaction",
-        order_id: res.data.orders.id,
-        handler: async function (response) {
-          const verifyRes = await apiInstance.post("/payment/verify", {
-            razorpay_order_id: response.razorpay_order_id,
-            razorpay_payment_id: response.razorpay_payment_id,
-            razorpay_signature: response.razorpay_signature,
-            product_id: product._id,
-          })
-          toast.success(verifyRes.data.message)
-        },
-        prefill: {
-          name: "Amit Kumar Patel",
-          email: "amit@example.com",
-          contact: "9999999999",
-        },
-        theme: { color: "blue" },
-      }
-
-      const razorpayScreen = new window.Razorpay(options)
-      razorpayScreen.open()
-    }
-  }
 
   return (
     <div
@@ -135,7 +106,10 @@ const Cart = () => {
               {/* Quantity Controls */}
               <div className="flex items-center gap-3 mt-2">
                 <button
-                  onClick={() => updateQuantity(item.productId._id, -1)}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    updateQuantity(item.productId._id, -1)
+                  }}
                   className="bg-gray-200 px-3 py-1 rounded-md text-lg font-bold hover:bg-gray-300"
                 >
                   -
@@ -144,7 +118,10 @@ const Cart = () => {
                 <span className="text-xl font-semibold">{item.quantity}</span>
 
                 <button
-                  onClick={() => updateQuantity(item.productId._id, +1)}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    updateQuantity(item.productId._id, +1)
+                  }}
                   className="bg-blue-500 text-white px-3 py-1 rounded-md text-lg font-bold hover:bg-blue-600"
                 >
                   +
@@ -159,7 +136,10 @@ const Cart = () => {
 
             {/* DELETE BUTTON */}
             <button
-              onClick={() => deleteItem(item.productId._id)}
+              onClick={(e) => {
+                e.stopPropagation()
+                deleteItem(item.productId._id)
+              }}
               className="text-red-500 font-semibold hover:text-red-700 cursor-pointer"
             >
               <Delete />
@@ -174,10 +154,10 @@ const Cart = () => {
           Total Amount: <span className="text-green-600">₹{totalAmount}</span>
         </h2>
         <button
-          onClick={paymentHandler}
+           onClick={()=>navigate("/product/cart/address")}
           className="bg-green-500 p-2 rounded-xl cursor-pointer hover:bg-green-400"
         >
-          ⚡ Buy Now
+          Check Out
         </button>
       </div>
     </div>

@@ -20,7 +20,7 @@ router.get("/filter/:category/:subCategory/:item",getProductByItemCategoryContro
 
 
 router.put("/update-product/:product_id",authMiddleware, uploads.array("images", 5), updateProductController);
-router.delete("/delete-product/:product_id", authMiddleware, deleteProductController);
+router.delete("/delete-product/:product_id",authMiddleware, deleteProductController);
 router.post("/generate-description",authMiddleware, generateAiDescription);
 router.post("/addCart",authMiddleware, addCartHandler);
 

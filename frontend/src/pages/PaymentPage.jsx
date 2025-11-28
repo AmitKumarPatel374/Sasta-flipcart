@@ -6,6 +6,7 @@ import { usercontext } from "../context/DataContext";
 const PaymentPage = () => {
   const [selectedMethod, setSelectedMethod] = useState("");
   const {totalAmount,currency}=useContext(usercontext);
+  
 
   console.log(selectedMethod);
   
@@ -14,10 +15,11 @@ const PaymentPage = () => {
     toast.success("order placed successfully!")
   };
 
+
    const paymentHandler = async () => {
     let details = {
-      amount: totalAmount,
-      currency: currency || "INR",
+      amount: totalAmount || localStorage.getItem("amountToPay"),
+      currency: currency||localStorage.getItem("currencyToPay")||"INR",
     }
 
     const res = await apiInstance.post("/payment/process", details)
@@ -108,9 +110,7 @@ const PaymentPage = () => {
 
         {/* BUTTON */}
         <button
-          onClick={() =>
-            selectedMethod==="COD" ? handleCOD() : paymentHandler()
-          }
+          onClick={paymentHandler}
           className="w-full bg-blue-600 text-white py-3 rounded-xl text-lg font-semibold shadow-md hover:bg-blue-700 transition"
         >
           Pay Now
