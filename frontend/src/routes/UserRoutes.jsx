@@ -120,6 +120,10 @@ const UserRutes = () => {
         path="/product/orders"
         element={<OrderPage />}
       />
+      <Route
+        path="/product/orders/track/:order_id"
+        element={<OrderPage />}
+      />
 
       <Route
         path="*"

@@ -13,7 +13,7 @@ const createOrder = async (req, res) => {
     }
     
     const items = user.cart.map((item) => ({
-      productId: item.productId._id,
+      product: item.productId._id,
       quantity: item.quantity,
     }))
 
@@ -60,7 +60,7 @@ const getOrderController = async (req, res) => {
   try {
     const userId = req.user._id
 
-    const orders = await orderModel.find({ userId })
+    const orders = await orderModel.find({ userId }).populate("items.productId");
 
     if (!orders) {
       return res.status(400).json({
