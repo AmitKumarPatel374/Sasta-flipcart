@@ -1,48 +1,84 @@
+const orderModel = require("../model/order.model")
+const UserModel = require("../model/user.model")
+
 const createOrder = async (req, res) => {
   try {
-    const userId = req.user._id;
+    const userId = req.user._id
+    const { amountToPay, currencyToPay } = req.body
 
-    const user = await UserModel.findById(userId).populate("cart.productId");
+    const user = await UserModel.findById(userId).populate("cart.productId")
 
     if (!user || user.cart.length === 0) {
-      return res.status(400).json({ message: "Cart is empty" });
+      return res.status(400).json({ message: "Cart is empty" })
     }
 
-    const items = user.cart.map(item => ({
+    const items = user.cart.map((item) => ({
       productId: item.productId._id,
-      quantity: item.quantity
-    }));
+      quantity: item.quantity,
+    }))
 
-    const totalAmount = items.reduce(
-      (sum, i) => sum + i.productId.price.amount * i.quantity,
-      0
-    );
+    // console.log(items);
+    // const totalAmount = items.reduce(
+    //   (sum, i) => sum + i.productId.price.amount * i.quantity,
+    //   0
+    // );
 
     // Create new order
-    const order = await OrderModel.create({
+    const order = await orderModel.create({
       userId,
       items,
-      totalAmount,
+      price: {
+        totalAmount: amountToPay,
+        currency: currencyToPay,
+      },
       paymentStatus: "Paid",
       orderStatus: "Order Placed",
       tracking: {
         currentLocation: "Warehouse",
-        history: [
-          { location: "Warehouse", status: "Order Placed" }
-        ]
-      }
-    });
+        history: [{ location: "Warehouse", status: "Order Placed" }],
+      },
+    })
 
     // Clear cart after placing order
-    user.cart = [];
-    await user.save();
-
-    res.json({ message: "Order created", order });
-
+    user.cart = []
+    await user.save()
+    
+    return res.status(201).json({
+      message:"order created successfully!",
+      order:order
+    })
   } catch (err) {
-    console.log(err);
-    res.status(500).json({ message: "Server error" });
+    console.log("error in fetchOrder->", error)
+    return res.status(500).json({
+      message: "internal server error!",
+      error: error,
+    })
   }
-};
+}
 
-module.exports = {createOrder}
+const getOrderController = async (req, res) => {
+  try {
+    const userId = req.user._id
+
+    const orders = await orderModel.find({ userId })
+
+    if (!response) {
+      return res.status(400).json({
+        message: "something went wrong",
+      })
+    }
+
+    return res.status(200).json({
+      message: "order gets successfully!",
+      orders: orders,
+    })
+  } catch (error) {
+    console.log("error in fetchOrder->", error)
+    return res.status(500).json({
+      message: "internal server error!",
+      error: error,
+    })
+  }
+}
+
+module.exports = { createOrder,getOrderController }

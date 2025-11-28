@@ -1,25 +1,25 @@
-import React, { useContext, useState } from "react";
-import apiInstance from "../config/apiInstance";
-import { toast } from "react-toastify";
-import { usercontext } from "../context/DataContext";
+import React, { useContext, useState } from "react"
+import apiInstance from "../config/apiInstance"
+import { toast } from "react-toastify"
+import { usercontext } from "../context/DataContext"
 
 const PaymentPage = () => {
-  const [selectedMethod, setSelectedMethod] = useState("");
-  const {totalAmount,currency}=useContext(usercontext);
-  
+  const [selectedMethod, setSelectedMethod] = useState("")
+  const { totalAmount, currency } = useContext(usercontext)
 
-  console.log(selectedMethod);
-  
+  console.log(selectedMethod)
 
   const handleCOD = () => {
     toast.success("order placed successfully!")
-  };
+  }
 
+  const amountToPay = localStorage.getItem("amountToPay")
+  const currencyToPay = localStorage.getItem("currencyToPay")
 
-   const paymentHandler = async () => {
+  const paymentHandler = async () => {
     let details = {
-      amount: totalAmount || localStorage.getItem("amountToPay"),
-      currency: currency||localStorage.getItem("currencyToPay")||"INR",
+      amount: totalAmount || amountToPay,
+      currency: currency || currencyToPay || "INR",
     }
 
     const res = await apiInstance.post("/payment/process", details)
@@ -53,19 +53,31 @@ const PaymentPage = () => {
     }
   }
 
+  const options ={amountToPay,currencyToPay}
+
+  const orderHandler=async()=>{
+    try {
+      const response = await apiInstance.post("/order/create",options);
+      console.log(response);
+    } catch (error) {
+      console.log("error in orderHandler->",error);
+    }
+  }
+
   return (
     <div className=" bg-gray-100 flex justify-center p-4 md:p-10">
       <div className="w-full max-w-2xl bg-white rounded-2xl shadow-lg border border-gray-200 p-6 md:p-8">
-
         {/* HEADER */}
-        <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">
-          Payment Options
-        </h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">Payment Options</h1>
 
         {/* OPTION: CASH ON DELIVERY */}
         <div
           className={`p-5 rounded-xl border mb-5 cursor-pointer transition-colors 
-          ${selectedMethod === "COD" ? "border-blue-600 bg-blue-50" : "border-gray-300 bg-gray-50 hover:bg-gray-100"}`}
+          ${
+            selectedMethod === "COD"
+              ? "border-blue-600 bg-blue-50"
+              : "border-gray-300 bg-gray-50 hover:bg-gray-100"
+          }`}
           onClick={() => setSelectedMethod("COD")}
         >
           <div className="flex gap-4 items-start">
@@ -78,9 +90,7 @@ const PaymentPage = () => {
             />
             <div>
               <p className="font-semibold text-lg text-gray-800">Cash on Delivery</p>
-              <p className="text-gray-600 text-sm">
-                Pay with cash when your order is delivered.
-              </p>
+              <p className="text-gray-600 text-sm">Pay with cash when your order is delivered.</p>
             </div>
           </div>
         </div>
@@ -88,7 +98,11 @@ const PaymentPage = () => {
         {/* OPTION: ONLINE PAYMENT */}
         <div
           className={`p-5 rounded-xl border mb-6 cursor-pointer transition-colors 
-          ${selectedMethod === "ONLINE" ? "border-blue-600 bg-blue-50" : "border-gray-300 bg-gray-50 hover:bg-gray-100"}`}
+          ${
+            selectedMethod === "ONLINE"
+              ? "border-blue-600 bg-blue-50"
+              : "border-gray-300 bg-gray-50 hover:bg-gray-100"
+          }`}
           onClick={() => setSelectedMethod("ONLINE")}
         >
           <div className="flex gap-4 items-start">
@@ -101,21 +115,21 @@ const PaymentPage = () => {
             />
             <div>
               <p className="font-semibold text-lg text-gray-800">Online Payment</p>
-              <p className="text-gray-600 text-sm">
-                Pay using UPI, Cards, Netbanking or Wallets.
-              </p>
+              <p className="text-gray-600 text-sm">Pay using UPI, Cards, Netbanking or Wallets.</p>
             </div>
           </div>
         </div>
 
         {/* BUTTON */}
         <button
-          onClick={()=>{
-            if (selectedMethod==="COD") {
+          onClick={() => {
+            if (selectedMethod === "COD") {
               handleCOD()
-            }else if(selectedMethod==="ONLINE"){
-              paymentHandler();
-            }else{
+              orderHandler()
+            } else if (selectedMethod === "ONLINE") {
+              paymentHandler()
+              orderHandler()
+            } else {
               toast.error("select a payment method!")
             }
           }}
@@ -123,10 +137,9 @@ const PaymentPage = () => {
         >
           Pay Now
         </button>
-
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default PaymentPage;
+export default PaymentPage

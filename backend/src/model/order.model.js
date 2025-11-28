@@ -16,8 +16,17 @@ const orderSchema = new mongoose.Schema({
       quantity: Number,
     },
   ],
-
-  totalAmount: Number,
+  price: {
+    totalAmount: {
+      type: Number,
+      required: true,
+    },
+    currency: {
+      type: String,
+      enum: ["INR", "DOLLAR"],
+      default: "INR",
+    },
+  },
   paymentStatus: {
     type: String,
     default: "Paid",
@@ -46,6 +55,6 @@ const orderSchema = new mongoose.Schema({
   },
 })
 
-const orderModel = mongoose.model("order",orderSchema)
+const orderModel = mongoose.model("order", orderSchema)
 
-module.exports = orderModel;
+module.exports = orderModel
