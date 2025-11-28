@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import apiInstance from "../config/apiInstance";
+import { useNavigate } from "react-router-dom";
 
 const OrderPage = () => {
   const [orders, setOrders] = useState([]);
+  const navigate = useNavigate();
 
   // --------------------------
   // Fetch Orders
@@ -20,6 +22,8 @@ const OrderPage = () => {
     fetchOrder();
   }, []);
 
+  console.log(orders);
+  
   
 
   return (
@@ -43,9 +47,9 @@ const OrderPage = () => {
             <div className="flex justify-between items-center border-b pb-3">
               <h2 className="text-lg font-semibold">Order ID: {order._id}</h2>
               <p className="text-sm text-gray-600">
-                Status:{" "}
+                Status:
                 <span className="font-semibold text-green-600">
-                  {order.tracking?.status}
+                  {order.tracking?.history?.status}
                 </span>
               </p>
             </div>
@@ -88,7 +92,7 @@ const OrderPage = () => {
                 </p>
               </div>
 
-              <button  className="px-5 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition">
+              <button onClick={()=>navigate(`/product/orders/track/${order._id}`)}  className="px-5 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition">
                 Track Order →
               </button>
             </div>

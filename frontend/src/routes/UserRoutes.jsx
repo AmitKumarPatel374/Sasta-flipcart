@@ -23,6 +23,7 @@ import Cart from "../pages/Cart"
 import AddressForm from "../pages/AddressForm"
 import PaymentPage from "../pages/PaymentPage"
 import OrderPage from "../pages/OrderPage"
+import TrackOrder from "../pages/TrackOrder"
 
 const UserRutes = () => {
   return (
@@ -122,7 +123,7 @@ const UserRutes = () => {
       />
       <Route
         path="/product/orders/track/:order_id"
-        element={<OrderPage />}
+        element={<TrackOrder />}
       />
 
       <Route

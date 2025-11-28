@@ -80,5 +80,29 @@ const getOrderController = async (req, res) => {
     })
   }
 }
+const trackOrderController = async (req, res) => {
+  try {
+    const orderId = req.params.order_id; 
 
-module.exports = { createOrder,getOrderController }
+    const order = await orderModel.findById(orderId).populate("items.productId");
+
+    if (!order) {
+      return res.status(400).json({
+        message: "something went wrong",
+      })
+    }
+
+    return res.status(200).json({
+      message: "order fetch successfully!",
+      order: order,
+    })
+  } catch (error) {
+    console.log("error in trackOrder->", error)
+    return res.status(500).json({
+      message: "internal server error!",
+      error: error,
+    })
+  }
+}
+
+module.exports = { createOrder,getOrderController,trackOrderController }
