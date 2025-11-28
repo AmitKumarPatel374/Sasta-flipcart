@@ -22,9 +22,6 @@ const OrderPage = () => {
     fetchOrder();
   }, []);
 
-  console.log(orders);
-  
-  
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen">

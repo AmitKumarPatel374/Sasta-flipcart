@@ -49,8 +49,6 @@ const DataContext = (props) => {
     getCategories()
   }, [])
 
-  // console.log(categories);
-  console.log(totalAmount,currency);
 
   return (
     <usercontext.Provider

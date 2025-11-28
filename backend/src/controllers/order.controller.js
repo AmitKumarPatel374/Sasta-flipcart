@@ -7,13 +7,14 @@ const createOrder = async (req, res) => {
     const { amountToPay, currencyToPay } = req.body
 
     const user = await UserModel.findById(userId).populate("cart.productId")
+    
 
     if (!user || user.cart.length === 0) {
       return res.status(400).json({ message: "Cart is empty" })
     }
-    
+    const seller_id = user.cart[0].productId.createdBy;
     const items = user.cart.map((item) => ({
-      product: item.productId._id,
+      productId: item.productId._id,
       quantity: item.quantity,
     }))
 
@@ -26,6 +27,7 @@ const createOrder = async (req, res) => {
     // Create new order
     const order = await orderModel.create({
       userId,
+      seller_id,
       items,
       price: {
         totalAmount: amountToPay,
@@ -48,10 +50,10 @@ const createOrder = async (req, res) => {
       order:order
     })
   } catch (err) {
-    console.log("error in fetchOrder->", error)
+    console.log("error in fetchOrder->", err)
     return res.status(500).json({
       message: "internal server error!",
-      error: error,
+      error: err,
     })
   }
 }

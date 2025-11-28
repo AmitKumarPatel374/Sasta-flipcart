@@ -5,6 +5,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { Delete } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { usercontext } from "../context/DataContext"
+import { toast } from "react-toastify"
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -43,9 +44,9 @@ const Cart = () => {
 
   const deleteItem = async (id) => {
     console.log(id)
-    const res =await apiInstance.delete(`/product/cart/delete/${id}`);
-    console.log(res);
-    
+    const res = await apiInstance.delete(`/product/cart/delete/${id}`)
+    console.log(res)
+
     fetchCart()
   }
 
@@ -73,6 +74,18 @@ const Cart = () => {
     return () => ctx.revert()
   }, [])
 
+  const checkOwnersSame = async () => {
+    if (cartItems.length === 0) {
+      return false
+    }
+
+    const owners = cartItems.map((item) => item.productId.createdBy)
+
+    // Check if all owners are same
+    const firstOwner = owners[0]
+    const allSame = owners.every((owner) => owner === firstOwner)
+    return allSame
+  }
 
 
   return (
@@ -154,7 +167,13 @@ const Cart = () => {
           Total Amount: <span className="text-green-600">₹{totalAmount}</span>
         </h2>
         <button
-           onClick={()=>navigate("/product/cart/address")}
+          onClick={() => {
+            if(!checkOwnersSame()){
+              toast.error("All products must be from the same seller to place the order!");
+              return;
+            }
+            navigate("/product/cart/address")
+          }}
           className="bg-green-500 p-2 rounded-xl cursor-pointer hover:bg-green-400"
         >
           Check Out
