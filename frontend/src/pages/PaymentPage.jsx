@@ -110,7 +110,15 @@ const PaymentPage = () => {
 
         {/* BUTTON */}
         <button
-          onClick={paymentHandler}
+          onClick={()=>{
+            if (selectedMethod==="COD") {
+              handleCOD()
+            }else if(selectedMethod==="ONLINE"){
+              paymentHandler();
+            }else{
+              toast.error("select a payment method!")
+            }
+          }}
           className="w-full bg-blue-600 text-white py-3 rounded-xl text-lg font-semibold shadow-md hover:bg-blue-700 transition"
         >
           Pay Now
