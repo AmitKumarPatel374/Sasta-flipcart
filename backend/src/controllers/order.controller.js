@@ -124,8 +124,8 @@ const adminOrdersController = async (req, res) => {
     }
 
     return res.status(200).json({
-      message: "order fetch successfully!",
-      order: order,
+      message: "orders fetch successfully!",
+      orders: order,
     })
   } catch (error) {
     console.log("error in fetchAdmin Order->", error)

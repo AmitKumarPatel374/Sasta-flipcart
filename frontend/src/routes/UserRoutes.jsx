@@ -24,6 +24,7 @@ import AddressForm from "../pages/AddressForm"
 import PaymentPage from "../pages/PaymentPage"
 import OrderPage from "../pages/OrderPage"
 import TrackOrder from "../pages/TrackOrder"
+import AdminOrders from "../pages/AdminOrders"
 
 const UserRutes = () => {
   return (
@@ -124,6 +125,10 @@ const UserRutes = () => {
       <Route
         path="/product/orders/track/:order_id"
         element={<TrackOrder />}
+      />
+      <Route
+        path="/product/orders/seller"
+        element={<AdminOrders />}
       />
 
       <Route

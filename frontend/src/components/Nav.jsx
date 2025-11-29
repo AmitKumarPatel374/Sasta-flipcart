@@ -99,6 +99,7 @@ const Nav = () => {
                 Products
               </NavLink>
               <NavLink to="/create-product" className={linkClass}>Create Product</NavLink>
+              <NavLink to="/product/orders/seller" onClick={toggleMenu} className={linkClass}>Orders</NavLink>
               <NavLink to="/view-users" className={linkClass}>View Users</NavLink>
               <NavLink to="/about" className={linkClass}>About</NavLink>
               <NavLink to="/user-profile" className={linkClass}>Profile</NavLink>
@@ -173,6 +174,7 @@ const Nav = () => {
                 </NavLink>
                 <NavLink to="/create-product" onClick={toggleMenu} className={linkClass}>Create Product</NavLink>
                 <NavLink to="/view-users" onClick={toggleMenu} className={linkClass}>View Users</NavLink>
+                <NavLink to="/product/orders/seller" onClick={toggleMenu} className={linkClass}>Orders</NavLink>
                 <NavLink to="/about" onClick={toggleMenu} className={linkClass}>About</NavLink>
                 <NavLink to="/user-profile" onClick={toggleMenu} className={linkClass}>Profile</NavLink>
               </>
