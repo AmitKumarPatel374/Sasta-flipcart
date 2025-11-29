@@ -4,7 +4,9 @@ const UserModel = require("../model/user.model")
 const createOrder = async (req, res) => {
   try {
     const userId = req.user._id
-    const { amountToPay, currencyToPay } = req.body
+    const { amountToPay, currencyToPay,selectedMethod ,address} = req.body
+    console.log(address);
+    
 
     const user = await UserModel.findById(userId).populate("cart.productId")
     
@@ -28,12 +30,13 @@ const createOrder = async (req, res) => {
     const order = await orderModel.create({
       userId,
       seller_id,
+      address_id:address,
       items,
       price: {
         totalAmount: amountToPay,
         currency: currencyToPay,
       },
-      paymentStatus: "Paid",
+      paymentStatus:selectedMethod==="ONLINE"? "Paid" : "Cash on delivery!",
       orderStatus: "Order Placed",
       tracking: {
         currentLocation: "Warehouse",
@@ -82,6 +85,7 @@ const getOrderController = async (req, res) => {
     })
   }
 }
+
 const trackOrderController = async (req, res) => {
   try {
     const orderId = req.params.order_id; 
@@ -107,4 +111,29 @@ const trackOrderController = async (req, res) => {
   }
 }
 
-module.exports = { createOrder,getOrderController,trackOrderController }
+const adminOrdersController = async (req, res) => {
+  try {
+    const userId = req.user._id
+
+    const order = await orderModel.find({seller_id:userId}).populate("items.productId");
+
+    if (!order) {
+      return res.status(400).json({
+        message: "something went wrong",
+      })
+    }
+
+    return res.status(200).json({
+      message: "order fetch successfully!",
+      order: order,
+    })
+  } catch (error) {
+    console.log("error in fetchAdmin Order->", error)
+    return res.status(500).json({
+      message: "internal server error!",
+      error: error,
+    })
+  }
+}
+
+module.exports = { createOrder,getOrderController,trackOrderController,adminOrdersController }

@@ -7,6 +7,8 @@ const PaymentPage = () => {
   const [selectedMethod, setSelectedMethod] = useState("")
   const { totalAmount, currency } = useContext(usercontext)
 
+    const {addressId, setAddressId} = useContext(usercontext);
+    
   console.log(selectedMethod)
 
   const handleCOD = () => {
@@ -36,9 +38,16 @@ const PaymentPage = () => {
             razorpay_order_id: response.razorpay_order_id,
             razorpay_payment_id: response.razorpay_payment_id,
             razorpay_signature: response.razorpay_signature,
-            product_id: product._id,
           })
-          toast.success(verifyRes.data.message)
+          if (verifyRes.data.payment?.status === "paid") {
+            toast.success("Payment Success!")
+
+            // ---- IMPORTANT ----
+            // Now create order here
+            await orderHandler()
+          } else {
+            toast.error("Payment Failed!")
+          }
         },
         prefill: {
           name: "Amit Kumar Patel",
@@ -53,14 +62,15 @@ const PaymentPage = () => {
     }
   }
 
-  const options ={amountToPay,currencyToPay}
+  const address = addressId || localStorage.getItem("addressId")
+  const options = { amountToPay, currencyToPay, selectedMethod,address }
 
-  const orderHandler=async()=>{
+  const orderHandler = async () => {
     try {
-      const response = await apiInstance.post("/order/create",options);
-      console.log(response);
+      const response = await apiInstance.post("/order/create", options)
+      console.log(response)
     } catch (error) {
-      console.log("error in orderHandler->",error);
+      console.log("error in orderHandler->", error)
     }
   }
 
@@ -128,7 +138,7 @@ const PaymentPage = () => {
               orderHandler()
             } else if (selectedMethod === "ONLINE") {
               paymentHandler()
-              orderHandler()
+              // orderHandler()
             } else {
               toast.error("select a payment method!")
             }

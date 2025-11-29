@@ -14,6 +14,7 @@ const DataContext = (props) => {
   const [categories, setCategories] = useState([])
   const [totalAmount, setTotalAmount] = useState(0)
   const [currency, setCurrency] = useState("")
+  const [addressId, setAddressId] = useState(localStorage.getItem("addressId")||null)
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -49,7 +50,6 @@ const DataContext = (props) => {
     getCategories()
   }, [])
 
-
   return (
     <usercontext.Provider
       value={{
@@ -69,6 +69,8 @@ const DataContext = (props) => {
         setTotalAmount,
         currency,
         setCurrency,
+        addressId,
+        setAddressId,
       }}
     >
       {props.children}

@@ -1,19 +1,25 @@
-import GetDeliveryAddress from "../components/GetDeliveryAddress";
-import AddressFormLayout from "../layouts/AddressFormLayout";
-import React, { useState } from "react";
+import { usercontext } from "../context/DataContext"
+import GetDeliveryAddress from "../components/GetDeliveryAddress"
+import AddressFormLayout from "../layouts/AddressFormLayout"
+import React, { useContext, useState } from "react"
 
 const AddressForm = () => {
-  const [isAdd, setIsAdd] = useState(false);
-  const [selectedAddress, setSelectedAddress] = useState(null);
+  const [isAdd, setIsAdd] = useState(false)
+  const [selectedAddress, setSelectedAddress] = useState(null)
+
+    const {addressId, setAddressId} = useContext(usercontext);
+    setAddressId(selectedAddress)
+    localStorage.setItem("addressId",selectedAddress)
 
   return (
     <div className="min-h-screen bg-gray-100 p-4 md:p-8">
       {/* DELIVERY ADDRESSES */}
       <div className="max-w-3xl mx-auto bg-white shadow-lg rounded-xl p-6 mb-8">
-        <h1 className="text-2xl font-bold mb-4 text-gray-800">
-          Delivery Addresses
-        </h1>
-        <GetDeliveryAddress selectedAddress={selectedAddress} setSelectedAddress={setSelectedAddress} />
+        <h1 className="text-2xl font-bold mb-4 text-gray-800">Delivery Addresses</h1>
+        <GetDeliveryAddress
+          selectedAddress={selectedAddress}
+          setSelectedAddress={setSelectedAddress}
+        />
       </div>
 
       {/* ADD NEW BUTTON */}
@@ -30,16 +36,19 @@ const AddressForm = () => {
       {isAdd && (
         <div className="max-w-3xl mx-auto bg-white shadow-xl rounded-xl p-6 mb-10">
           <div className="flex items-center justify-between px-2">
-            <h2 className="text-xl font-semibold mb-4 text-gray-700">
-            Add Delivery Address
-          </h2>
-          <button onClick={()=>setIsAdd(false)} className="bg-red-500 py-2 px-6 rounded-xl font-bold">X</button>
+            <h2 className="text-xl font-semibold mb-4 text-gray-700">Add Delivery Address</h2>
+            <button
+              onClick={() => setIsAdd(false)}
+              className="bg-red-500 py-2 px-6 rounded-xl font-bold"
+            >
+              X
+            </button>
           </div>
           <AddressFormLayout setIsAdd={setIsAdd} />
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default AddressForm;
+export default AddressForm
