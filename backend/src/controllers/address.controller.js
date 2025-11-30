@@ -92,4 +92,29 @@ const getAddressController = async (req, res) => {
   }
 }
 
-module.exports = { pincodeController, addAddressController,getAddressController }
+const getAddressByIdController = async(req,res)=>{
+  try {
+    const address_id = req.params.address_id;
+
+    const address = await addressModel.findById(address_id);
+
+    if (!address) {
+      return res.status(400).json({
+        message:"something went wrong!"
+      })
+    }
+
+    return res.status(200).json({
+      message:"address fetched successfully!",
+      address:address
+    })
+  } catch (error) {
+    console.log("error in fetching address->", error)
+    return res.status(500).json({
+      message: "Internal server error",
+      error: error,
+    })
+  }
+}
+
+module.exports = { pincodeController, addAddressController,getAddressController,getAddressByIdController }

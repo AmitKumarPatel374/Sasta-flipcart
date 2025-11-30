@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from "react";
 import apiInstance from "../config/apiInstance";
 import { MapPin, Truck, CheckCircle, IndianRupee, Clock } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const AdminOrders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const Navigate = useNavigate();
 
-  // Store each address data
+  // Store fetched address details
   const [addressList, setAddressList] = useState({});
-  // For toggling visibility of each address
+  // Toggle for show/hide address per order
   const [openAddress, setOpenAddress] = useState({});
 
-  // Fetch orders
+  // Fetch Orders
   const fetchOrders = async () => {
     try {
       const response = await apiInstance.get("/order/admin/orders");
@@ -27,10 +29,11 @@ const AdminOrders = () => {
     fetchOrders();
   }, []);
 
-  // Load address by ID
+  // Fetch Address by ID
   const loadAddress = async (id) => {
     try {
-      const res = await apiInstance.get(`/address/get/${id}`);
+      const res = await apiInstance.get(`/address/address/${id}`);
+
       setAddressList((prev) => ({
         ...prev,
         [id]: res.data.address,
@@ -128,7 +131,6 @@ const AdminOrders = () => {
                     Address ID: {order.address_id}
                   </span>
 
-                  {/* BUTTON */}
                   <button
                     onClick={() => {
                       setOpenAddress((prev) => ({
@@ -148,30 +150,40 @@ const AdminOrders = () => {
 
                 {/* ADDRESS BOX */}
                 {openAddress[order.address_id] && (
-                  <div className="ml-7 mt-2 bg-gray-100 p-3 rounded-lg border text-sm text-gray-700">
+                  <div className="ml-7 mt-3 bg-white shadow-sm border border-gray-200 rounded-xl p-4 space-y-2 animate-fadeIn">
                     {addressList[order.address_id] ? (
                       <>
-                        <p>
-                          <strong>Name:</strong>{" "}
-                          {addressList[order.address_id].ownerName}
-                        </p>
-                        <p>
-                          <strong>Mobile:</strong>{" "}
-                          {addressList[order.address_id].mobile}
-                        </p>
-                        <p>
-                          <strong>Address:</strong>{" "}
-                          {addressList[order.address_id].buildingName},{" "}
-                          {addressList[order.address_id].city},{" "}
-                          {addressList[order.address_id].state} -{" "}
-                          {addressList[order.address_id].pincode}
-                        </p>
-                        {addressList[order.address_id].landmark && (
+                        <p className="font-semibold text-gray-800 text-base">📍 Delivery Address</p>
+
+                        <div className="text-gray-700 text-sm space-y-1">
+
                           <p>
-                            <strong>Landmark:</strong>{" "}
-                            {addressList[order.address_id].landmark}
+                            <strong className="text-gray-900">Name:</strong>{" "}
+                            {addressList[order.address_id].ownerName}
                           </p>
-                        )}
+
+                          <p>
+                            <strong className="text-gray-900">Mobile:</strong>{" "}
+                            {addressList[order.address_id].mobile}
+                          </p>
+
+                          <p>
+                            <strong className="text-gray-900">Address:</strong>
+                            <span className="ml-1">
+                              {addressList[order.address_id].buildingName},{" "}
+                              {addressList[order.address_id].city},{" "}
+                              {addressList[order.address_id].state} –{" "}
+                              {addressList[order.address_id].pincode}
+                            </span>
+                          </p>
+
+                          {addressList[order.address_id].landmark && (
+                            <p>
+                              <strong className="text-gray-900">Landmark:</strong>{" "}
+                              {addressList[order.address_id].landmark}
+                            </p>
+                          )}
+                        </div>
                       </>
                     ) : (
                       <p className="text-gray-500 italic">Loading...</p>
@@ -203,6 +215,7 @@ const AdminOrders = () => {
                 <IndianRupee size={20} />
                 Total Amount: {order.price?.totalAmount}
               </p>
+              <button onClick={()=>Navigate(`/product/orders/seller/update/${order._id}`)}>update Order</button>
             </div>
           </div>
         ))}

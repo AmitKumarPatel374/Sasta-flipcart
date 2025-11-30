@@ -61,6 +61,96 @@ const createOrder = async (req, res) => {
   }
 }
 
+const updateOrder = async (req, res) => {
+  try {
+    const userId = req.user._id
+    const { amountToPay, currencyToPay,selectedMethod ,address} = req.body
+    console.log(address);
+    
+
+    const user = await UserModel.findById(userId).populate("cart.productId")
+    
+
+    if (!user || user.cart.length === 0) {
+      return res.status(400).json({ message: "Cart is empty" })
+    }
+    const seller_id = user.cart[0].productId.createdBy;
+    const items = user.cart.map((item) => ({
+      productId: item.productId._id,
+      quantity: item.quantity,
+    }))
+
+    // console.log(items);
+    // const totalAmount = items.reduce(
+    //   (sum, i) => sum + i.productId.price.amount * i.quantity,
+    //   0
+    // );
+
+    // Create new order
+    const order = await orderModel.create({
+      userId,
+      seller_id,
+      address_id:address,
+      items,
+      price: {
+        totalAmount: amountToPay,
+        currency: currencyToPay,
+      },
+      paymentStatus:selectedMethod==="ONLINE"? "Paid" : "Cash on delivery!",
+      orderStatus: "Order Placed",
+      tracking: {
+        currentLocation: "Warehouse",
+        history: [{ location: "Warehouse", status: "Order Placed" }],
+      },
+    })
+
+    // Clear cart after placing order
+    user.cart = []
+    await user.save()
+    
+    return res.status(201).json({
+      message:"order created successfully!",
+      order:order
+    })
+  } catch (err) {
+    console.log("error in fetchOrder->", err)
+    return res.status(500).json({
+      message: "internal server error!",
+      error: err,
+    })
+  }
+}
+
+const getOrderByIdController = async (req, res) => {
+  try {
+    const order_id = req.params.order_id;
+
+    if (!order_id) {
+      return res.status(404).json({
+        message:"order_id not found"
+      })
+    }
+
+    const order = await orderModel.findById(order_id)
+
+    if (!order) {
+      return res.status(400).json({
+        message: "something went wrong",
+      })
+    }
+
+    return res.status(200).json({
+      message: "order gets successfully!",
+      order: order,
+    })
+  } catch (error) {
+    console.log("error in fetchOrder->", error)
+    return res.status(500).json({
+      message: "internal server error!",
+      error: error,
+    })
+  }
+}
 const getOrderController = async (req, res) => {
   try {
     const userId = req.user._id
@@ -122,7 +212,6 @@ const adminOrdersController = async (req, res) => {
         message: "something went wrong",
       })
     }
-
     return res.status(200).json({
       message: "orders fetch successfully!",
       orders: order,
@@ -136,4 +225,4 @@ const adminOrdersController = async (req, res) => {
   }
 }
 
-module.exports = { createOrder,getOrderController,trackOrderController,adminOrdersController }
+module.exports = { createOrder,getOrderController,trackOrderController,adminOrdersController,getOrderByIdController }
