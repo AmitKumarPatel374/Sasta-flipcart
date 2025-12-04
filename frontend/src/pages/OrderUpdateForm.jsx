@@ -42,18 +42,18 @@ const OrderUpdateForm = () => {
     fetchOrder();
   }, []);
 
-  // UPDATE ORDER
-  // const updateOrder = async () => {
-  //   try {
-  //     const res = await apiInstance.put(
-  //       `/order/admin/order/update/${order_id}`,
-  //       formData
-  //     );
-  //     toast.success("Order updated successfully!");
-  //     navigate("/product/orders/seller");
-  //   } catch (err) {
-  //     console.log("update error", err);
-  //   }
+  UPDATE ORDER
+  const updateOrder = async () => {
+    try {
+      const res = await apiInstance.put(
+        `/order/admin/order/update/${order_id}`,
+        formData
+      );
+      toast.success("Order updated successfully!");
+      navigate("/product/orders/seller");
+    } catch (err) {
+      console.log("update error", err);
+    }
   };
 
   if (loading) return <p className="p-10 text-gray-700">Loading...</p>;
