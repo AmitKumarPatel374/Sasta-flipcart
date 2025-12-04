@@ -140,6 +140,15 @@ const ViewProductDetail = () => {
     images,
   } = product
 
+  const deleteHandler = async(id)=>{
+    try {
+      const response = await apiInstance.delete(`/product/delete-product/${id}`);
+      toast.success(response.data.message);
+      navigate(-1)
+    } catch (error) {
+      console.log("error in deleting->",error);
+    }
+  }
 
   return (
     <div>
@@ -277,7 +286,7 @@ const ViewProductDetail = () => {
                     🔁 Update Product
                   </button>
                   <button
-                    onClick={() => deleteHandler(product._id)}
+                    onClick={() => deleteHandler(product_id)}
                     className="px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-500 transition w-full sm:w-auto"
                   >
                     🗑️ Delete Product

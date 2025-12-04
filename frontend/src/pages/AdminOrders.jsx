@@ -1,47 +1,47 @@
-import React, { useEffect, useState } from "react";
-import apiInstance from "../config/apiInstance";
-import { MapPin, Truck, CheckCircle, IndianRupee, Clock } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react"
+import apiInstance from "../config/apiInstance"
+import { MapPin, Truck, CheckCircle, IndianRupee, Clock } from "lucide-react"
+import { useNavigate } from "react-router-dom"
 
 const AdminOrders = () => {
-  const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const Navigate = useNavigate();
+  const [orders, setOrders] = useState([])
+  const [loading, setLoading] = useState(true)
+  const Navigate = useNavigate()
 
   // Store fetched address details
-  const [addressList, setAddressList] = useState({});
+  const [addressList, setAddressList] = useState({})
   // Toggle for show/hide address per order
-  const [openAddress, setOpenAddress] = useState({});
+  const [openAddress, setOpenAddress] = useState({})
 
   // Fetch Orders
   const fetchOrders = async () => {
     try {
-      const response = await apiInstance.get("/order/admin/orders");
-      setOrders(response.data.orders);
+      const response = await apiInstance.get("/order/admin/orders")
+      setOrders(response.data.orders)
     } catch (error) {
-      console.log("error in fetching orders ->", error);
+      console.log("error in fetching orders ->", error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   useEffect(() => {
-    fetchOrders();
-  }, []);
+    fetchOrders()
+  }, [])
 
   // Fetch Address by ID
   const loadAddress = async (id) => {
     try {
-      const res = await apiInstance.get(`/address/address/${id}`);
+      const res = await apiInstance.get(`/address/address/${id}`)
 
       setAddressList((prev) => ({
         ...prev,
         [id]: res.data.address,
-      }));
+      }))
     } catch (error) {
-      console.log("Error fetching address", error);
+      console.log("Error fetching address", error)
     }
-  };
+  }
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
@@ -98,16 +98,10 @@ const AdminOrders = () => {
                   />
 
                   <div className="flex-1">
-                    <p className="font-semibold text-gray-800 text-lg">
-                      {item.productId?.title}
-                    </p>
-                    <p className="text-gray-600 text-sm">
-                      {item.productId?.brand}
-                    </p>
+                    <p className="font-semibold text-gray-800 text-lg">{item.productId?.title}</p>
+                    <p className="text-gray-600 text-sm">{item.productId?.brand}</p>
 
-                    <p className="text-gray-700 font-medium mt-1">
-                      Quantity: {item.quantity}
-                    </p>
+                    <p className="text-gray-700 font-medium mt-1">Quantity: {item.quantity}</p>
                   </div>
 
                   <p className="text-blue-600 font-bold text-lg flex items-center">
@@ -122,24 +116,24 @@ const AdminOrders = () => {
 
             {/* ORDER INFO */}
             <div className="flex flex-col gap-3 text-gray-700 text-sm">
-
               {/* ADDRESS SECTION */}
               <div className="flex flex-col gap-1">
                 <div className="flex items-center gap-3">
-                  <MapPin size={18} className="text-blue-600" />
-                  <span className="font-medium">
-                    Address ID: {order.address_id}
-                  </span>
+                  <MapPin
+                    size={18}
+                    className="text-blue-600"
+                  />
+                  <span className="font-medium">Address ID: {order.address_id}</span>
 
                   <button
                     onClick={() => {
                       setOpenAddress((prev) => ({
                         ...prev,
                         [order.address_id]: !prev[order.address_id],
-                      }));
+                      }))
 
                       if (!addressList[order.address_id]) {
-                        loadAddress(order.address_id);
+                        loadAddress(order.address_id)
                       }
                     }}
                     className="px-3 py-1 text-xs font-semibold bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
@@ -156,7 +150,6 @@ const AdminOrders = () => {
                         <p className="font-semibold text-gray-800 text-base">📍 Delivery Address</p>
 
                         <div className="text-gray-700 text-sm space-y-1">
-
                           <p>
                             <strong className="text-gray-900">Name:</strong>{" "}
                             {addressList[order.address_id].ownerName}
@@ -193,35 +186,47 @@ const AdminOrders = () => {
               </div>
 
               <p className="flex items-center gap-2">
-                <Clock size={18} className="text-purple-600" />
-                <span>
-                  Ordered On: {new Date(order.createdAt).toLocaleString()}
-                </span>
+                <Clock
+                  size={18}
+                  className="text-purple-600"
+                />
+                <span>Ordered On: {new Date(order.createdAt).toLocaleString()}</span>
               </p>
 
               <p className="flex items-center gap-2">
-                <CheckCircle size={18} className="text-green-600" />
+                <CheckCircle
+                  size={18}
+                  className="text-green-600"
+                />
                 <span>Status: {order.orderStatus}</span>
               </p>
 
               <p className="flex items-center gap-2">
-                <Truck size={18} className="text-orange-600" />
-                <span>
-                  Current Location: {order.tracking?.currentLocation}
-                </span>
+                <Truck
+                  size={18}
+                  className="text-orange-600"
+                />
+                <span>Current Location: {order.tracking?.currentLocation}</span>
               </p>
 
               <p className="flex items-center gap-2 font-semibold text-lg text-blue-700 mt-3">
                 <IndianRupee size={20} />
                 Total Amount: {order.price?.totalAmount}
               </p>
-              <button onClick={()=>Navigate(`/product/orders/seller/update/${order._id}`)}>update Order</button>
+              <button
+                onClick={() => Navigate(`/product/orders/seller/update/${order._id}`)}
+                className="mt-4 w-full py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 shadow-md
+                  hover:shadow-lg hover:from-blue-700 hover:to-indigo-700 transform hover:-translate-y-0.5 transition-all
+                  flex justify-center items-center gap-2"
+              >
+                ✏️ Update Order
+              </button>
             </div>
           </div>
         ))}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default AdminOrders;
+export default AdminOrders
