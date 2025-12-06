@@ -1,90 +1,89 @@
-import { useParams, useNavigate } from "react-router-dom";
-import apiInstance from "../config/apiInstance";
-import React, { useEffect, useState } from "react";
-import { toast } from "react-toastify";
+import { useParams, useNavigate } from "react-router-dom"
+import apiInstance from "../config/apiInstance"
+import React, { useEffect, useState } from "react"
+import { toast } from "react-toastify"
 
 const OrderUpdateForm = () => {
-  const { order_id } = useParams();
-  
-  const navigate = useNavigate();
+  const { order_id } = useParams()
 
-  const [loading, setLoading] = useState(true);
-  const [order, setOrder] = useState(null);
+  const navigate = useNavigate()
+
+  const [loading, setLoading] = useState(true)
+  const [order, setOrder] = useState(null)
 
   const [formData, setFormData] = useState({
     orderStatus: "",
     currentLocation: "",
     paymentStatus: "",
-  });
+  })
 
   // Fetch existing order
   const fetchOrder = async () => {
     try {
-      const res = await apiInstance.get(`/order/admin/order/${order_id}`);
-      const data = res.data.order;
+      const res = await apiInstance.get(`/order/admin/order/${order_id}`)
+      const data = res.data.order
 
-      setOrder(data);
+      setOrder(data)
 
       // Pre-fill form
       setFormData({
         orderStatus: data.orderStatus,
         currentLocation: data.tracking.currentLocation,
         paymentStatus: data.paymentStatus,
-      });
+      })
 
-      setLoading(false);
+      setLoading(false)
     } catch (error) {
-      console.log("error fetching order", error);
+      console.log("error fetching order", error)
     }
-  };
+  }
 
   useEffect(() => {
-    fetchOrder();
-  }, []);
+    fetchOrder()
+  }, [])
 
-  UPDATE ORDER
+  // UPDATE ORDER
   const updateOrder = async () => {
     try {
-      const res = await apiInstance.put(
-        `/order/admin/order/update/${order_id}`,
-        formData
-      );
-      toast.success("Order updated successfully!");
-      navigate("/product/orders/seller");
+      const res = await apiInstance.put(`/order/admin/order/update/${order_id}`, formData)
+      toast.success("Order updated successfully!")
+      navigate("/product/orders/seller")
     } catch (err) {
-      console.log("update error", err);
+      console.log("update error", err)
     }
-  };
+  }
 
-  if (loading) return <p className="p-10 text-gray-700">Loading...</p>;
+  if (loading) return <p className="p-10 text-gray-700">Loading...</p>
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen flex justify-center">
       <div className="w-full max-w-xl bg-white rounded-xl shadow-lg p-8">
-        
-        <h1 className="text-3xl font-bold mb-6 text-gray-800">
-          📝 Update Order
-        </h1>
+        <h1 className="text-3xl font-bold mb-6 text-gray-800">📝 Update Order</h1>
 
         {/* ORDER SUMMARY */}
         <div className="bg-gray-50 p-4 border rounded-lg mb-6">
-          <p><strong>Order ID:</strong> {order._id}</p>
-          <p><strong>User ID:</strong> {order.userId}</p>
-          <p><strong>Seller ID:</strong> {order.seller_id}</p>
-          <p><strong>Payment:</strong> {order.paymentStatus}</p>
+          <p>
+            <strong>Order ID:</strong> {order._id}
+          </p>
+          <p>
+            <strong>User ID:</strong> {order.userId}
+          </p>
+          <p>
+            <strong>Seller ID:</strong> {order.seller_id}
+          </p>
+          <p>
+            <strong>Payment:</strong> {order.paymentStatus}
+          </p>
         </div>
 
         {/* FORM */}
         <div className="space-y-5">
-
           {/* ORDER STATUS */}
           <div>
             <label className="font-medium text-gray-700">Order Status</label>
             <select
               value={formData.orderStatus}
-              onChange={(e) =>
-                setFormData({ ...formData, orderStatus: e.target.value })
-              }
+              onChange={(e) => setFormData({ ...formData, orderStatus: e.target.value })}
               className="w-full p-3 border rounded-lg mt-1"
             >
               <option>Order Placed</option>
@@ -101,9 +100,7 @@ const OrderUpdateForm = () => {
             <input
               type="text"
               value={formData.currentLocation}
-              onChange={(e) =>
-                setFormData({ ...formData, currentLocation: e.target.value })
-              }
+              onChange={(e) => setFormData({ ...formData, currentLocation: e.target.value })}
               className="w-full p-3 border rounded-lg mt-1"
               placeholder="Update location.."
             />
@@ -114,16 +111,13 @@ const OrderUpdateForm = () => {
             <label className="font-medium text-gray-700">Payment Status</label>
             <select
               value={formData.paymentStatus}
-              onChange={(e) =>
-                setFormData({ ...formData, paymentStatus: e.target.value })
-              }
+              onChange={(e) => setFormData({ ...formData, paymentStatus: e.target.value })}
               className="w-full p-3 border rounded-lg mt-1"
             >
               <option>Paid</option>
               <option>Cash on delivery!</option>
             </select>
           </div>
-
         </div>
 
         {/* BUTTONS */}
@@ -142,10 +136,9 @@ const OrderUpdateForm = () => {
             Cancel
           </button>
         </div>
-
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default OrderUpdateForm;
+export default OrderUpdateForm
