@@ -18,6 +18,7 @@ require("./src/services/googleOauth.service");
 const session = require("express-session");
 const passport = require("passport");
 
+require("./src/workers/emailWorker.js")
 
 connectDB();
 const app = express();

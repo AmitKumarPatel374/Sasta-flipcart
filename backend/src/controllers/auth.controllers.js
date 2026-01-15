@@ -8,6 +8,7 @@ const sendFilesToStorage = require("../services/storage.service")
 const { getCookieOptions, getClearCookieOptions } = require("../utils/cookie.utils")
 const otpVerifyTemp = require("../utils/email.verify.temp")
 const { sendSMS } = require("../services/message.service")
+const { emailQueue } = require("../queues/emailQueue")
 
 const registerController = async (req, res) => {
   try {
@@ -84,10 +85,16 @@ const loginController = async (req, res) => {
     user.otpExpiry = otpExpiry
     await user.save()
 
-    let verifyTemp = otpVerifyTemp(user.username, otp)
-
+    // let verifyTemp = otpVerifyTemp(user.username, otp)
     if (isEmail) {
-      await sendMail(contact, "Verify Your Email", verifyTemp)
+      const email = contact;
+      const username=user.fullname;
+       await emailQueue.add("verify-email", {
+      email,
+      username,
+      otp,
+      otpExpiry,
+    })
     } else {
       await sendSMS(`+91${contact}`, `Your OTP is ${otp}`)
     }
