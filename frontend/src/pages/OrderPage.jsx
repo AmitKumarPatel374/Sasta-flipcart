@@ -43,41 +43,51 @@ const OrderPage = () => {
               <p className="text-sm text-gray-600">
                 Status:
                 <span className="font-semibold text-green-600">
-                  {order.tracking?.history?.status}
+                  {order.tracking?.history?.status || "Pending"}
                 </span>
               </p>
             </div>
 
             {/* Product Items */}
             <div className="mt-4 space-y-4">
-              {order.items.map((item) => (
-                <div
-                  key={item.productId._id}
-                  className="flex items-center gap-4 p-3 border rounded-lg"
-                >
-                  <img
-                    src={item.productId.images[0]}
-                    alt=""
-                    className="w-40 h-20 object-cover rounded-lg"
-                  />
+              {order.items.map((item) => {
+                const product = item.productId || {} // fallback if productId is null
 
-                  <div className="flex-1">
-                    <h3 className="text-md font-semibold">{item.productId.title}</h3>
-                    <p className="text-sm text-gray-600">Qty: {item.quantity}</p>
+                return (
+                  <div
+                    key={product._id || Math.random()}
+                    className="flex items-center gap-4 p-3 border rounded-lg"
+                  >
+                    <img
+                      src={
+                        product.images?.[0] ||
+                        "https://via.placeholder.com/150?text=No+Image"
+                      }
+                      alt=""
+                      className="w-40 h-20 object-cover rounded-lg"
+                    />
 
-                    <p className="text-sm text-gray-700 font-medium">
-                      ₹ {item.productId.price.amount}
-                    </p>
+                    <div className="flex-1">
+                      <h3 className="text-md font-semibold">
+                        {product.title || "Unknown Product"}
+                      </h3>
+
+                      <p className="text-sm text-gray-600">Qty: {item.quantity}</p>
+
+                      <p className="text-sm text-gray-700 font-medium">
+                        ₹ {product.price?.amount || 0}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
 
             {/* Order Footer */}
             <div className="mt-4 flex justify-between items-center border-t pt-3">
               <div>
                 <p className="text-gray-600 text-sm">Payment</p>
-                <p className="text-lg font-bold">₹ {order.price.totalAmount}</p>
+                <p className="text-lg font-bold">₹ {order.price?.totalAmount || 0}</p>
               </div>
 
               <button
